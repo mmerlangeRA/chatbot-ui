@@ -1,0 +1,69 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Visual Crossing Weather Data",
+    "description": "Retrieves current and forecast weather data for a specified location using Visual Crossing Web Services.",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline"
+    }
+  ],
+  "paths": {
+    "/{location}": {
+      "get": {
+        "description": "Get weather data for a specific location",
+        "operationId": "getWeatherData",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "path",
+            "description": "The location for which to retrieve the weather, in the format City,CountryCode.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Your API key for accessing Visual Crossing Weather data.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "location": {
+                      "type": "string",
+                      "description": "The requested location"
+                    },
+                    "temperatures": {
+                      "type": "object",
+                      "description": "Object containing temperature data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "401": {
+            "description": "Unauthorized access, invalid API key"
+          }
+        }
+      }
+    }
+  }
+}

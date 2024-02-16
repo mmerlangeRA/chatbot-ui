@@ -1,0 +1,7 @@
+Goapi: aabf80a680312755e7ad40ac9b10f0cb063573fbcfbfe2438ca5fe8020419d6f
+
+curl -X POST 
+     -H "Content-Type: application/json" 
+     -H "X-API-KEY: aabf80a680312755e7ad40ac9b10f0cb063573fbcfbfe2438ca5fe8020419d6f" 
+     -d '{"prompt":"A cat with a hat","process_mode":"fast"}' 
+     'https://api.midjourneyapi.xyz/mj/v2/imagine'

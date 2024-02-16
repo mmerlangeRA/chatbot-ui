@@ -1,0 +1,56 @@
+{
+  "openapi": "3.1.0",
+  "request_in_body": false,
+  "info": {
+    "title": "midjourneyapi",
+    "description": "You know what it is",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api/tools"
+    }
+  ],
+  "paths": {
+    "/midjourney": {
+      "post": {
+        "description": "Get beautiful image",
+        "operationId": "getMidJourney",
+        "parameters": [
+          {
+            "name": "prompt",
+            "description": "The prompt",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imageUrl": {
+                      "type": "string",
+                      "description": "The task id to retrieve images"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "401": {
+            "description": "Unauthorized access, invalid API key"
+          }
+        }
+      }
+    }
+  }
+}
