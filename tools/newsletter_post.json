@@ -1,0 +1,62 @@
+{
+  "openapi": "3.1.0",
+  "request_in_body": true,
+  "info": {
+    "title": "newsletter",
+    "description": "Create a list of summarized articles",
+    "version": "v1.0.0"
+  },
+  "name": "newsletter_post_string",
+  "servers": [
+    {
+      "url": "http://localhost:8001/v1/tools"
+    }
+  ],
+  "paths": {
+    "/create_newsletter_string": {
+      "post": {
+        "tags": ["newsletter"],
+        "summary": "Create a list of summarized articlese",
+        "description": "Create a list of summarized articles",
+        "operationId": "create_newsletter_string",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "instructions_for_ranking": {
+                    "description": "Instructions for ranking, needed to know the criteria to apply for ranking the articles",
+                    "type": "string"
+                  },
+                  "model": {
+                    "description": "The model to use for summarizing the articles",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

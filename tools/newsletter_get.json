@@ -1,0 +1,47 @@
+{
+  "openapi": "3.1.0",
+  "request_in_body": true,
+  "info": {
+    "title": "create_newsletter",
+    "description": "Create a list of summarized articles from scrapping instructions",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8001"
+    }
+  ],
+  "paths": {
+    "/v1/tools/create_newsletter": {
+      "get": {
+        "description": "generate a list of summarized and ranked articles",
+        "operationId": "create_newsletter",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "string",
+                      "description": "The list of ranked summarized articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "401": {
+            "description": "Unauthorized access, invalid API key"
+          }
+        }
+      }
+    }
+  }
+}

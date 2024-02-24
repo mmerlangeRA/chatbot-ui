@@ -1,0 +1,90 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "create_newsletter_with_params",
+    "description": "Create a list of summarized articles",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8001"
+    }
+  ],
+  "paths": {
+    "/v1/tools/create_newsletter": {
+      "post": {
+        "description": "Create a list of summarized articles",
+        "operationId": "create_newsletter_with_params",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "instructions_for_ranking": {
+                    "type": "string",
+                    "description": "Instructions for ranking, needed to know the criteria to apply for ranking the articles"
+                  },
+                  "instructions_for_finding": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "description": "The URL to look for"
+                        },
+                        "query": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          },
+                          "description": "Instructions for finding the URLs"
+                        }
+                      }
+                    },
+                    "description": "Instructions for finding. An array of objects with keys 'url' and 'query'."
+                  },
+                  "model": {
+                    "type": "string",
+                    "description": "The model to use for summarizing the articles",
+                    "required": false
+                  }
+                },
+                "required": [
+                  "instructions_for_ranking",
+                  "instructions_for_finding"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "string",
+                      "description": "The list of ranked summarized articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "401": {
+            "description": "Unauthorized access, invalid API key"
+          }
+        }
+      }
+    }
+  }
+}

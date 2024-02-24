@@ -1,0 +1,72 @@
+{
+  "openapi": "3.1.0",
+  "request_in_body": true,
+  "info": {
+    "title": "create_newsletter",
+    "description": "Create a list of summarized articles from scrapping instructions",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8001"
+    }
+  ],
+  "paths": {
+    "/v1/tools/create_newsletter": {
+      "post": {
+        "description": "Create a list of summarized articles",
+        "operationId": "create_newsletter",
+        "parameters": [
+          {
+            "name": "instructions_for_ranking",
+            "description": "instructions for ranking, needed to know the criteria to apply for ranking the articles",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "instructions_for_scrapping",
+            "description": "Instructions for scrapping. An array of objects with the keys 'url' and 'query' where 'query' are instructions for scrapping the url and 'url' is the url to scrap. The scrapping instructions are in the form of a list of strings where each string is a step in the scrapping process they explain what to scrap to get urls",
+            "required": true,
+            "schema": {
+              "type": "array"
+            }
+          },
+          {
+            "name": "model",
+            "description": "The model to use for summarizing the articles",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "articles": {
+                      "type": "string",
+                      "description": "The list of ranked summarized articles"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request parameters"
+          },
+          "401": {
+            "description": "Unauthorized access, invalid API key"
+          }
+        }
+      }
+    }
+  }
+}

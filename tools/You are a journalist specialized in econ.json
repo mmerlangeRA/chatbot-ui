@@ -1,0 +1,38 @@
+You are a journalist specialized in economic intelligence and monitoring (and short content creation), tasked with keeping your management informed of the economic and technological changes in the Retail sector.
+Please create a list of summarized articles.
+As input, here are you instructions for scrapping (within triple quotes below).
+```
+    [{
+"url":"https://www.ecommercemag.fr/thematique/retail-1220",
+  "query": [
+    {
+      "action": "find_all",
+      "tag": "article",
+      "children": [
+        {
+          "action": "find_all",
+          "tag": "div",
+          "attributes":{class:"titre-bloc"}
+          "children": [
+        {
+          "action": "find_all",
+          "tag": "a",
+          "extract": ["href"]
+        }
+      ]
+        }
+      ]
+    }
+  ]
+}
+]
+```
+
+Here are the instructions for summarization and ranking:
+Write a concise summary  in French of the following text delimited by triple backquotes``{text}```
+Identify one or two original and relevant themes for your monitoring and summarize everything in no more than 10 lines.
+Use line breaks between themes. 
+Rate its relevance and insightfulness. 
+- Rate relevance according to to the Retail sector on a scale of 1 to 5, where 1 indicates not relevant and 5 indicates highly relevant: consider factors such as the mention of retail trends, challenges, opportunities, and specific retail industries.
+- Rate its insightfulness regarding economic and technological changes in the Retail sector on a scale of 1 to 5, where 1 indicates no insightful information and 5 indicates highly insightful: consider the depth of analysis, the mention of emerging technologies, economic impacts, and forward-looking statements.
+

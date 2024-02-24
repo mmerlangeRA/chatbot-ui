@@ -1,0 +1,67 @@
+{
+  "openapi": "3.1.0",
+  "request_in_body": true,
+  "info": {
+    "title": "newsletter",
+    "description": "Create a list of summarized articles",
+    "version": "v1.0.0"
+  },
+  "name":"newsletter_post",
+  "servers": [
+    {
+      "url": "http://localhost:8001/v1/tools"
+    }
+  ],
+  "paths": {
+    "/create_newsletter_string": {
+        "post": {
+          "description": "Create a list of summarized articles",
+          "operationId": "create_newsletter_with_params",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "instructions_for_ranking": {
+                      "description": "Instructions for ranking, needed to know the criteria to apply for ranking the articles",
+                      "type": "string"
+                    },
+                    "model": {
+                      "description": "The model to use for summarizing the articles",
+                      "type": "string",
+                      "required":false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "translation": {
+                        "type": "string",
+                        "description": "The translated text"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid request parameters"
+            },
+            "401": {
+              "description": "Unauthorized access, invalid API key"
+            }
+          }
+        }
+      }
+    }
+  }

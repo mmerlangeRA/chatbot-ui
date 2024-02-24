@@ -45,7 +45,8 @@ export async function POST(request: Request) {
         )
 
         allRouteMaps = { ...allRouteMaps, ...routeMap }
-
+        console.log("writing schame")
+        console.log(convertedSchema)
         schemaDetails.push({
           title: convertedSchema.info.title,
           description: convertedSchema.info.description,
