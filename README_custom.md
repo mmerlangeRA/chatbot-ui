@@ -12,3 +12,9 @@ npm run db-push
 ## Vercel deploy
 
 https://chatbot-ui-rho-ten-95.vercel.app/
+
+Excellianz
+
+
+sudo docker build -t chatbot-ui:latest .
+sudo docker run -d -p 3000:3000 chatbot-ui:latest
