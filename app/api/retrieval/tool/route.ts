@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       azure_openai_endpoint: "",
       azure_openai_embeddings_id: "",
       openai_organization_id: "",
-      openai_api_key: "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"
+      openai_api_key: process.env.OPENAI_API_KEY || ""
     }
     console.log("step2")
 
