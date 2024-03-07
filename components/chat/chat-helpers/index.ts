@@ -58,6 +58,8 @@ export const handleRetrieval = async (
   embeddingsProvider: "openai" | "local",
   sourceCount: number
 ) => {
+  console.log("handleRetrieval")
+  console.log("userInput=" + userInput)
   const response = await fetch("/api/retrieval/retrieve", {
     method: "POST",
     body: JSON.stringify({

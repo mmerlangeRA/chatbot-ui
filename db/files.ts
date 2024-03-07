@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase/browser-client"
 import { TablesInsert, TablesUpdate } from "@/supabase/types"
 import mammoth from "mammoth"
 import { toast } from "sonner"
-import { uploadFile } from "./storage/files"
+import { getFileFromStorage, uploadFile } from "./storage/files"
 
 export const getFileById = async (fileId: string) => {
   const { data: file, error } = await supabase
@@ -117,10 +117,14 @@ export const createFile = async (
     file_path: filePath
   })
 
+  const file_url = await getFileFromStorage(filePath)
+  console.log(file_url)
   const formData = new FormData()
+  formData.append("file_url", file_url)
   formData.append("file", file)
   formData.append("file_id", createdFile.id)
   formData.append("embeddingsProvider", embeddingsProvider)
+  formData.append("user_id", createdFile.user_id)
 
   const response = await fetch("/api/retrieval/process", {
     method: "POST",

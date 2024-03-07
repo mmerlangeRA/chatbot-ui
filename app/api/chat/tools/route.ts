@@ -45,8 +45,7 @@ export async function POST(request: Request) {
         )
 
         allRouteMaps = { ...allRouteMaps, ...routeMap }
-        console.log("writing schame")
-        console.log(convertedSchema)
+
         schemaDetails.push({
           title: convertedSchema.info.title,
           description: convertedSchema.info.description,
@@ -69,6 +68,14 @@ export async function POST(request: Request) {
     const message = firstResponse.choices[0].message
     messages.push(message)
     const toolCalls = message.tool_calls || []
+
+    if (toolCalls.length === 0) {
+      return new Response(message.content, {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+    }
 
     if (toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
@@ -135,6 +142,8 @@ export async function POST(request: Request) {
 
           const fullUrl = schemaDetail.url + path
 
+          console.log("calling " + fullUrl)
+
           const bodyContent = parsedArgs.requestBody || parsedArgs
 
           const requestInit = {
@@ -144,6 +153,7 @@ export async function POST(request: Request) {
           }
 
           const response = await fetch(fullUrl, requestInit)
+          console.log("GOT RESPONSE FROM POST TOOL")
 
           if (!response.ok) {
             data = {
@@ -152,6 +162,7 @@ export async function POST(request: Request) {
           } else {
             data = await response.json()
           }
+          console.log(data)
         } else {
           // If the type is set to query
           const queryParams = new URLSearchParams(
@@ -173,6 +184,7 @@ export async function POST(request: Request) {
             headers: headers
           })
 
+          console.log("GOT RESPONSE FROM GET TOOL")
           if (!response.ok) {
             data = {
               error: response.statusText
@@ -180,6 +192,7 @@ export async function POST(request: Request) {
           } else {
             data = await response.json()
           }
+          console.log(data)
         }
 
         messages.push({
@@ -190,7 +203,8 @@ export async function POST(request: Request) {
         })
       }
     }
-
+    console.log("sending")
+    console.log(messages)
     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,

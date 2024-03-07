@@ -1,0 +1,59 @@
+{
+  "openapi": "3.1.0",
+  "request_in_body": true,
+  "info": {
+    "title": "ppt",
+    "description": "Get information from reference database",
+    "version": "v1.0.0"
+  },
+  "name": "get_reference_info",
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/retrieval/tool": {
+      "post": {
+        "summary": "Get information from reference db",
+        "description": "Get information from reference database",
+        "operationId": "get_reference_info",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "title": "question",
+                    "description": "the question we need to answer thanks to the reference database",
+                    "default": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

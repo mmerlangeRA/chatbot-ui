@@ -1,17 +1,13 @@
 import { generateLocalEmbedding } from "@/lib/generate-local-embedding"
-import {
-  processCSV,
-  processJSON,
-  processMarkdown,
-  processPdf,
-  processTxt
-} from "@/lib/retrieval/processing"
+
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Database } from "@/supabase/types"
 import { FileItemChunk } from "@/types"
 import { createClient } from "@supabase/supabase-js"
 import { NextResponse } from "next/server"
 import OpenAI from "openai"
+
+const CHATBOT_URL = process.env.CHATBOT_URL
 
 export async function POST(req: Request) {
   try {
@@ -24,13 +20,10 @@ export async function POST(req: Request) {
 
     const formData = await req.formData()
 
-    const file = formData.get("file") as File
+    const file_url = formData.get("file_url") as File
+    const user_id = formData.get("user_id") as string
     const file_id = formData.get("file_id") as string
     const embeddingsProvider = formData.get("embeddingsProvider") as string
-
-    const fileBuffer = Buffer.from(await file.arrayBuffer())
-    const blob = new Blob([fileBuffer])
-    const fileExtension = file.name.split(".").pop()?.toLowerCase()
 
     if (embeddingsProvider === "openai") {
       if (profile.use_azure_openai) {
@@ -41,28 +34,20 @@ export async function POST(req: Request) {
     }
 
     let chunks: FileItemChunk[] = []
+    const server_retrieval_url = CHATBOT_URL + "/api/server_retrieval/chunks"
 
-    switch (fileExtension) {
-      case "csv":
-        chunks = await processCSV(blob)
-        break
-      case "json":
-        chunks = await processJSON(blob)
-        break
-      case "md":
-        chunks = await processMarkdown(blob)
-        break
-      case "pdf":
-        chunks = await processPdf(blob)
-        break
-      case "txt":
-        chunks = await processTxt(blob)
-        break
-      default:
-        return new NextResponse("Unsupported file type", {
-          status: 400
-        })
-    }
+    const response = await fetch(server_retrieval_url, {
+      method: "POST",
+      body: JSON.stringify({
+        url: file_url,
+        file_id,
+        embeddingsProvider,
+        user_id
+      })
+    })
+
+    const results = await response.json()
+    chunks = results.results.file_items
 
     let embeddings: any = []
 
@@ -132,6 +117,7 @@ export async function POST(req: Request) {
       status: 200
     })
   } catch (error: any) {
+    console.log(error)
     const errorMessage = error.error?.message || "An unexpected error occurred"
     const errorCode = error.status || 500
     return new Response(JSON.stringify({ message: errorMessage }), {
