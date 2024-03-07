@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
     let chunks: FileItemChunk[] = []
     const server_retrieval_url = CHATBOT_URL + "/api/server_retrieval/chunks"
-
+    console.log("server_retrieval_url", server_retrieval_url)
     const response = await fetch(server_retrieval_url, {
       method: "POST",
       body: JSON.stringify({
@@ -47,6 +47,7 @@ export async function POST(req: Request) {
     })
 
     const results = await response.json()
+    console.log(results)
     chunks = results.results.file_items
 
     let embeddings: any = []

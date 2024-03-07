@@ -23,8 +23,7 @@ export async function POST(request: Request) {
       apiKey: profile.openai_api_key || "",
       organization: profile.openai_organization_id
     })
-    console.log("calling OPENAI")
-    console.log(messages)
+
     const response = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages: messages as ChatCompletionCreateParamsBase["messages"],
