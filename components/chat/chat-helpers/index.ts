@@ -58,8 +58,6 @@ export const handleRetrieval = async (
   embeddingsProvider: "openai" | "local",
   sourceCount: number
 ) => {
-  console.log("handleRetrieval")
-  console.log("userInput=" + userInput)
   const response = await fetch("/api/retrieval/retrieve", {
     method: "POST",
     body: JSON.stringify({
@@ -264,7 +262,7 @@ export const fetchChatResponse = async (
     body: JSON.stringify(body),
     signal: controller.signal
   })
-
+  console.log(response)
   if (!response.ok) {
     if (response.status === 404 && !isHosted) {
       toast.error(

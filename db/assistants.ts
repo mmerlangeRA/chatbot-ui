@@ -37,6 +37,20 @@ export const getAssistantWorkspacesByWorkspaceId = async (
   return workspace
 }
 
+export const getAssistantWorkspacesByWorkspaceIdOrPublic = async (
+  workspaceId: string
+) => {
+  const { data: assistants, error } = await supabase.rpc("get_assistants", {
+    workspaceid: workspaceId
+  })
+
+  if (!assistants) {
+    throw new Error(error.message)
+  }
+
+  return assistants
+}
+
 export const getAssistantWorkspacesByAssistantId = async (
   assistantId: string
 ) => {

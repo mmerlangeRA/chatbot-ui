@@ -37,6 +37,20 @@ export const getCollectionWorkspacesByWorkspaceId = async (
   return workspace
 }
 
+export const getCollectionWorkspacesByWorkspaceIdOrPublic = async (
+  workspaceId: string
+) => {
+  const { data: collections, error } = await supabase.rpc("get_collections", {
+    workspaceid: workspaceId
+  })
+
+  if (!collections) {
+    throw new Error(error.message)
+  }
+
+  return collections
+}
+
 export const getCollectionWorkspacesByCollectionId = async (
   collectionId: string
 ) => {

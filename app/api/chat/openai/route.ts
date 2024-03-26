@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       apiKey: profile.openai_api_key || "",
       organization: profile.openai_organization_id
     })
-
+    const isStream = true
     const response = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages: messages as ChatCompletionCreateParamsBase["messages"],
@@ -31,10 +31,33 @@ export async function POST(request: Request) {
       max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null, // TODO: Fix
       stream: true
     })
+    /*  const isStream = true
+    const WS = new WebSocket("ws://localhost:8001/ws");
+    const response = await fetch("http://localhost:8001/v1/completion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTk1Nzk5NzQsImlhdCI6MTcxMDkzOTk3NCwic2NvcGUiOnsibW9kZWxzIjpbImdwdC0zLjUtdHVyYm8iXX19.guWlEHOW2YNdvJjueLWWDHwBNFz3iNv3I9ABHR7klww`
+      },
+      body: JSON.stringify({
+        model: chatSettings.model,
+        messages,
+        max_tokens:
+          chatSettings.model === "gpt-4-vision-preview" ? 4096 : null,
+        stream: isStream
+      })
+    } as any) */
+    if (isStream) {
+      const stream = OpenAIStream(response)
 
-    const stream = OpenAIStream(response)
-
-    return new StreamingTextResponse(stream)
+      return new StreamingTextResponse(stream)
+    } else {
+      /*       const json = await response.json()
+      console.log(json)
+      const retour = json.choices[0].message.content
+      console.log(retour) */
+      return response
+    }
   } catch (error: any) {
     let errorMessage = error.message || "An unexpected error occurred"
     const errorCode = error.status || 500

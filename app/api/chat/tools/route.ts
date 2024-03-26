@@ -118,7 +118,6 @@ export async function POST(request: Request) {
         // Determine if the request should be in the body or as a query
         const isRequestInBody = schemaDetail.requestInBody
         let data = {}
-
         if (isRequestInBody) {
           // If the type is set to body
           let headers = {
@@ -142,7 +141,7 @@ export async function POST(request: Request) {
 
           const fullUrl = schemaDetail.url + path
 
-          console.log("calling " + fullUrl)
+          //console.log("calling " + fullUrl)
 
           const bodyContent = parsedArgs.requestBody || parsedArgs
 
@@ -153,7 +152,7 @@ export async function POST(request: Request) {
           }
 
           const response = await fetch(fullUrl, requestInit)
-          console.log("GOT RESPONSE FROM POST TOOL")
+          //console.log("GOT RESPONSE FROM POST TOOL")
 
           if (!response.ok) {
             data = {
@@ -162,7 +161,7 @@ export async function POST(request: Request) {
           } else {
             data = await response.json()
           }
-          console.log(data)
+          //console.log(data)
         } else {
           // If the type is set to query
           const queryParams = new URLSearchParams(
@@ -192,7 +191,7 @@ export async function POST(request: Request) {
           } else {
             data = await response.json()
           }
-          console.log(data)
+          //console.log(data)
         }
 
         messages.push({
@@ -203,8 +202,8 @@ export async function POST(request: Request) {
         })
       }
     }
-    console.log("sending")
-    console.log(messages)
+    //console.log("sending")
+    //console.log(messages)
     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,

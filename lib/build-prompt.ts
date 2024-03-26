@@ -117,23 +117,55 @@ export async function buildFinalMessages(
     updated_at: "",
     user_id: ""
   }
-
+  const visionCapabableModel = payload.chatSettings.model
+    .toLowerCase()
+    .includes("vision")
+  console.log("visionCapabableModel", visionCapabableModel)
   finalMessages.unshift(tempSystemMessage)
 
   finalMessages = finalMessages.map(message => {
     let content
 
     if (message.image_paths.length > 0) {
-      content = [
-        {
-          type: "text",
-          text: message.content
-        },
-        ...message.image_paths.map(path => {
+      if (visionCapabableModel) {
+        content = [
+          {
+            type: "text",
+            text: message.content
+          },
+          ...message.image_paths.map(path => {
+            let formedUrl = ""
+
+            if (path.startsWith("data")) {
+              formedUrl = path
+            } else {
+              const chatImage = chatImages.find(image => image.path === path)
+
+              if (chatImage) {
+                formedUrl = chatImage.base64
+              }
+            }
+
+            return {
+              type: "image_url",
+              image_url: formedUrl
+            }
+          })
+        ]
+      } else {
+        const formedUrls: string[] = []
+        message.image_paths.forEach(async path => {
           let formedUrl = ""
 
           if (path.startsWith("data")) {
-            formedUrl = path
+            const raw = await fetch("/api/uploadImage", {
+              method: "POST",
+              body: JSON.stringify({
+                data_url: path
+              })
+            })
+            const response = await raw.json()
+            formedUrl = response.data_url
           } else {
             const chatImage = chatImages.find(image => image.path === path)
 
@@ -142,12 +174,19 @@ export async function buildFinalMessages(
             }
           }
 
-          return {
-            type: "image_url",
-            image_url: formedUrl
-          }
+          formedUrls.push(formedUrl)
         })
-      ]
+        const addedContent =
+          formedUrls.length > 0
+            ? " image_url are " + formedUrls.join(", ")
+            : " image_url is " + formedUrls[0]
+        content = [
+          {
+            type: "text",
+            text: message.content + addedContent
+          }
+        ]
+      }
     } else {
       content = message.content
     }
@@ -168,7 +207,7 @@ export async function buildFinalMessages(
       }\n\n${retrievalText}`
     }
   }
-
+  //console.log("finalMessages", finalMessages)
   return finalMessages
 }
 

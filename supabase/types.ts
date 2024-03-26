@@ -1499,6 +1499,44 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      get_collections: {
+        Args: {
+          workspaceid: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          updated_at: string | null
+          user_id: string
+          folder_id: string
+          sharing: string
+          name: string
+          description: string
+        }[]
+      }
+      get_assistants: {
+        Args: {
+          workspaceid: string
+        }
+        Returns: {
+          id: string
+          created_at: string
+          updated_at: string | null
+          user_id: string
+          folder_id: string
+          sharing: string
+          name: string
+          description: string
+          embeddings_provider: string
+          include_profile_context: boolean
+          include_workspace_instructions: boolean
+          model: string
+          image_path: string
+          prompt: string
+          temperature: number
+          context_length:number
+        }[]
+      }
       create_duplicate_messages_for_new_chat: {
         Args: {
           old_chat_id: string

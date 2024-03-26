@@ -31,6 +31,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   })
 
   const [isTyping, setIsTyping] = useState<boolean>(false)
+  const [inputMessagePlaceholder, setInputMessagePlaceholder] = useState("")
 
   const {
     isAssistantPickerOpen,
@@ -74,11 +75,20 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
   } = useChatHistoryHandler()
 
   const fileInputRef = useRef<HTMLInputElement>(null)
-
+  const inputMessagePlaceHoder = useRef<string>(``)
   useEffect(() => {
     setTimeout(() => {
       handleFocusChatInput()
     }, 200) // FIX: hacky
+    if (selectedAssistant) {
+      setInputMessagePlaceholder(
+        `Ask mee anything. Type "@" for assistants, "/" for prompts, "#" for files.`
+      )
+    } else {
+      setInputMessagePlaceholder(
+        `Ask me anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
+      )
+    }
   }, [selectedPreset, selectedAssistant])
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -168,6 +178,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
         <ChatFilesDisplay />
 
         {selectedTools &&
+          !selectedAssistant &&
           selectedTools.map((tool, index) => (
             <div
               key={index}
@@ -235,13 +246,10 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
             accept={filesToAccept}
           />
         </>
-
         <TextareaAutosize
           textareaRef={chatInputRef}
           className="ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring text-md flex w-full resize-none rounded-md border-none bg-transparent px-14 py-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-          placeholder={t(
-            `Ask anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
-          )}
+          placeholder={inputMessagePlaceholder}
           onValueChange={handleInputChange}
           value={userInput}
           minRows={1}

@@ -5,7 +5,7 @@ import { getAssistantToolsByAssistantId } from "@/db/assistant-tools"
 import { getCollectionFilesByCollectionId } from "@/db/collection-files"
 import { Tables } from "@/supabase/types"
 import { LLMID } from "@/types"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 
 export const usePromptAndCommand = () => {
   const {
@@ -26,7 +26,8 @@ export const usePromptAndCommand = () => {
     setIsAssistantPickerOpen,
     setSelectedAssistant,
     setChatSettings,
-    setChatFiles
+    setChatFiles,
+    selectedAssistant
   } = useContext(ChatbotUIContext)
 
   const handleInputChange = (value: string) => {
@@ -48,7 +49,7 @@ export const usePromptAndCommand = () => {
     } else if (hashtagMatch) {
       setIsFilePickerOpen(true)
       setHashtagCommand(hashtagMatch[1])
-    } else if (toolMatch) {
+    } else if (toolMatch && !selectedAssistant) {
       setIsToolPickerOpen(true)
       setToolCommand(toolMatch[1])
     } else {
