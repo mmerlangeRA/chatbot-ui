@@ -4,7 +4,7 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
 export async function getServerProfile() {
-  console.log("getServerProfile")
+  //console.log("getServerProfile")
   const cookieStore = cookies()
 
   const supabase = createServerClient<Database>(
@@ -37,7 +37,7 @@ export async function getServerProfile() {
   const profileWithKeys = addApiKeysToProfile(profile)
   const profileWithToken = await addTokenToProfile(profileWithKeys)
 
-  console.log("Profile with token", profileWithToken)
+  //console.log("Profile with token", profileWithToken)
   return profileWithToken
 }
 

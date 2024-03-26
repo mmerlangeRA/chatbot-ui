@@ -6,31 +6,29 @@ import { createClient } from "@supabase/supabase-js"
 import OpenAI from "openai"
 
 export async function POST(request: Request) {
-  console.log("retrieval_tool")
+  //console.log("retrieval_tool")
   const json = await request.json()
-  console.log(json)
+  //console.log(json)
   const { question } = json as {
     question: string
   }
-  console.log(question)
+  //console.log(question)
   const collectionId = "0df7cf76-5a61-4957-8619-bbc024cf7253"
   const collectionFileIds =
     await getCollectionFileIdsByCollectionId(collectionId)
-  console.log(collectionFileIds)
+  //console.log(collectionFileIds)
   const fileIds = collectionFileIds.map(file => file.file_id)
-  console.log(fileIds)
+  //console.log(fileIds)
   //const fileIds = ["937bd212-6070-42d1-85c6-727607099ab2"]
   const sourceCount = 3
   const embeddingsProvider = "openai"
   const uniqueFileIds = [...new Set(fileIds)]
 
   try {
-    console.log("step1")
     const supabaseAdmin = createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
-    console.log(process.env.NEXT_PUBLIC_SUPABASE_URL)
     const profile = {
       use_azure_openai: false,
       azure_openai_api_key: "",
@@ -39,7 +37,6 @@ export async function POST(request: Request) {
       openai_organization_id: "",
       openai_api_key: process.env.OPENAI_API_KEY || ""
     }
-    console.log("step2")
 
     if (embeddingsProvider === "openai") {
       if (profile.use_azure_openai) {
