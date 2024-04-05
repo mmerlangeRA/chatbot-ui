@@ -143,12 +143,16 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
         message,
         fileItems: messageFileItems
           .filter(messageFileItem => messageFileItem.id === message.id)
-          .flatMap(messageFileItem =>
-            messageFileItem.file_items.map(fileItem => fileItem.id)
-          )
+          .flatMap(messageFileItem => {
+            //@ts-ignore
+            messageFileItem.file_items.map(
+              (fileItem: { id: any }) => fileItem.id
+            )
+          })
       }
     })
     console.log(fetchedChatMessages)
+    //@ts-ignore
     setChatMessages(fetchedChatMessages)
   }
 

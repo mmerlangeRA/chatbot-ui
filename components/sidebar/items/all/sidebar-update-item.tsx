@@ -175,6 +175,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     presets: null,
     prompts: null,
     files: null,
+    batchFiles: null,
     collections: {
       startingCollectionFiles,
       setStartingCollectionFiles,
@@ -204,6 +205,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     presets: null,
     prompts: null,
     files: null,
+    batchFiles: null,
     collections: async (collectionId: string) => {
       const collectionFiles =
         await getCollectionFilesByCollectionId(collectionId)
@@ -240,6 +242,10 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       return item.workspaces
     },
     files: async (fileId: string) => {
+      const item = await getFileWorkspacesByFileId(fileId)
+      return item.workspaces
+    },
+    batchFiles: async (fileId: string) => {
       const item = await getFileWorkspacesByFileId(fileId)
       return item.workspaces
     },
@@ -369,6 +375,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
 
       return updatedFile
     },
+    batchFiles: null,
     collections: async (
       collectionId: string,
       updateState: TablesUpdate<"assistants">
@@ -576,6 +583,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     presets: setPresets,
     prompts: setPrompts,
     files: setFiles,
+    batchFiles: setFiles,
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,

@@ -1,8 +1,4 @@
-import { generateLocalEmbedding } from "@/lib/generate-local-embedding"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
-import { Database } from "@/supabase/types"
-import { createClient } from "@supabase/supabase-js"
-import OpenAI from "openai"
 
 const serverUrl = process.env.NOCODE_SERVER
 const token = process.env.NOCODE_SERVER_TOKEN
@@ -47,15 +43,26 @@ export async function POST(request: Request) {
 
     let mostSimilarChunks = parsed.results
     console.log(mostSimilarChunks)
-    mostSimilarChunks.forEach(element => {
-      element.content = element.page_content
-      element.file_id = element.metadata["file_id"]
-      element.user_id = element.metadata["user_id"]
-      element.id = element.metadata["id"]
-      element.page = element.metadata["page"]
-      delete element.page_content
-      delete element.metadata
-    })
+    mostSimilarChunks.forEach(
+      (element: {
+        content: any
+        page_content: any
+        file_id: any
+        metadata: { [x: string]: any }
+        user_id: any
+        id: any
+        page: any
+      }) => {
+        element.content = element.page_content
+        element.file_id = element.metadata["file_id"]
+        element.user_id = element.metadata["user_id"]
+        element.id = element.metadata["id"]
+        element.page = element.metadata["page"]
+        delete element.page_content
+        //@ts-ignore
+        delete element.metadata
+      }
+    )
     return new Response(JSON.stringify({ results: mostSimilarChunks }), {
       status: 200
     })
