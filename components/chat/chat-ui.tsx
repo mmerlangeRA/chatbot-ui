@@ -119,7 +119,9 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
 
     const messageFileItems = await Promise.all(messageFileItemPromises)
 
+    //@ts-ignore
     const uniqueFileItems = messageFileItems.flatMap(item => item.file_items)
+    console.log(uniqueFileItems)
     setChatFileItems(uniqueFileItems)
 
     const chatFiles = await getChatFilesByChatId(params.chatid as string)
@@ -135,7 +137,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
 
     setUseRetrieval(true)
     setShowFilesDisplay(true)
-
+    console.log("fetchedMessages", fetchedMessages)
     const fetchedChatMessages = fetchedMessages.map(message => {
       return {
         message,
@@ -146,7 +148,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
           )
       }
     })
-
+    console.log(fetchedChatMessages)
     setChatMessages(fetchedChatMessages)
   }
 

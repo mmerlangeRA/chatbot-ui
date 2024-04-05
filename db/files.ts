@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabase/browser-client"
 import { TablesInsert, TablesUpdate } from "@/supabase/types"
-import mammoth from "mammoth"
 import { toast } from "sonner"
 import { getFileFromStorage, uploadFile } from "./storage/files"
 
@@ -58,33 +57,6 @@ export const getFileWorkspacesByFileId = async (fileId: string) => {
   return file
 }
 
-export const createFileBasedOnExtension = async (
-  file: File,
-  fileRecord: TablesInsert<"files">,
-  workspace_id: string,
-  embeddingsProvider: "openai" | "local"
-) => {
-  const fileExtension = file.name.split(".").pop()
-
-  if (fileExtension === "docx") {
-    const arrayBuffer = await file.arrayBuffer()
-    const result = await mammoth.extractRawText({
-      arrayBuffer
-    })
-
-    return createDocXFile(
-      result.value,
-      file,
-      fileRecord,
-      workspace_id,
-      embeddingsProvider
-    )
-  } else {
-    return createFile(file, fileRecord, workspace_id, embeddingsProvider)
-  }
-}
-
-// For non-docx files
 export const createFile = async (
   file: File,
   fileRecord: TablesInsert<"files">,
@@ -118,74 +90,22 @@ export const createFile = async (
   })
 
   const file_url = await getFileFromStorage(filePath)
-  console.log(file_url)
+  const fileName = file.name
+
   const formData = new FormData()
   formData.append("file_url", file_url)
-  formData.append("file", file)
   formData.append("file_id", createdFile.id)
+  formData.append("file_name", fileName)
   formData.append("embeddingsProvider", embeddingsProvider)
   formData.append("user_id", createdFile.user_id)
+  console.log("insterting with file name " + fileName)
+  for (const value of formData.values()) {
+    console.log(value)
+  }
 
   const response = await fetch("/api/retrieval/process", {
     method: "POST",
     body: formData
-  })
-
-  if (!response.ok) {
-    toast.error("Failed to process file.")
-    await deleteFile(createdFile.id)
-  }
-
-  const fetchedFile = await getFileById(createdFile.id)
-
-  return fetchedFile
-}
-
-// // Handle docx files
-export const createDocXFile = async (
-  text: string,
-  file: File,
-  fileRecord: TablesInsert<"files">,
-  workspace_id: string,
-  embeddingsProvider: "openai" | "local"
-) => {
-  const { data: createdFile, error } = await supabase
-    .from("files")
-    .insert([fileRecord])
-    .select("*")
-    .single()
-
-  if (error) {
-    throw new Error(error.message)
-  }
-
-  await createFileWorkspace({
-    user_id: createdFile.user_id,
-    file_id: createdFile.id,
-    workspace_id
-  })
-
-  const filePath = await uploadFile(file, {
-    name: createdFile.name,
-    user_id: createdFile.user_id,
-    file_id: createdFile.name
-  })
-
-  await updateFile(createdFile.id, {
-    file_path: filePath
-  })
-
-  const response = await fetch("/api/retrieval/process/docx", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      text: text,
-      fileId: createdFile.id,
-      embeddingsProvider,
-      fileExtension: "docx"
-    })
   })
 
   if (!response.ok) {
@@ -276,6 +196,19 @@ export const deleteFile = async (fileId: string) => {
 
   if (error) {
     throw new Error(error.message)
+  }
+
+  const formData = new FormData()
+  formData.append("file_id", fileId)
+
+  //delete from vectorstore
+  const responseDelete = await fetch("/api/python_server/delete", {
+    method: "POST",
+    body: formData
+  })
+
+  if (!responseDelete.ok) {
+    throw new Error(responseDelete.statusText)
   }
 
   return true

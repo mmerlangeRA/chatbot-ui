@@ -14,7 +14,7 @@ import { createAssistant, updateAssistant } from "@/db/assistants"
 import { createChat } from "@/db/chats"
 import { createCollectionFiles } from "@/db/collection-files"
 import { createCollection } from "@/db/collections"
-import { createFileBasedOnExtension } from "@/db/files"
+import { createFile } from "@/db/files"
 import { createModel } from "@/db/models"
 import { createPreset } from "@/db/presets"
 import { createPrompt } from "@/db/prompts"
@@ -75,7 +75,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
 
       const { file, ...rest } = createState
 
-      const createdFile = await createFileBasedOnExtension(
+      const createdFile = await createFile(
         file,
         rest,
         workspaceId,
@@ -83,6 +83,32 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
       )
 
       return createdFile
+    },
+    batchFiles: async (
+      createState: { files: File[] } & TablesInsert<"files">,
+      workspaceId: string
+    ) => {
+      console.log("batchFiles")
+      if (!selectedWorkspace) return
+
+      const { files, ...rest } = createState
+      const createdFiles = []
+      for (let i = 0; i < files.length; i++) {
+        let local = JSON.parse(JSON.stringify(rest))
+        local.name = files[i].name
+        local.size = files[i]?.size || 0
+        local.type = files[i]?.type || 0
+        local.description = ""
+        const createdFile = await createFile(
+          files[i],
+          local,
+          workspaceId,
+          selectedWorkspace.embeddings_provider as "openai" | "local"
+        )
+        createdFiles.push(createdFile)
+        console.log(createdFile)
+      }
+      return createdFiles
     },
     collections: async (
       createState: {
@@ -178,6 +204,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     presets: setPresets,
     prompts: setPrompts,
     files: setFiles,
+    batchFiles: setFiles,
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,

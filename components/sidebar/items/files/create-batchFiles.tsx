@@ -20,16 +20,12 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
   const [description, setDescription] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedFiles, setSelectedFiles] = useState<File[] | []>([])
+  const [contentType, setContentType] = useState<File[] | []>([])
 
-  const handleSelectedFiles = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSelectedFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return
 
     setSelectedFiles(Array.from(e.target.files))
-    const file = e.target.files[0]
-    if (!file) return
-    setSelectedFile(file)
   }
 
   if (!profile) return null
@@ -45,9 +41,9 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
           name,
           description,
           file_path: "",
-          size: selectedFile?.size || 0,
+          size: 0,
           tokens: 0,
-          type: selectedFile?.type || 0
+          type: ""
         } as TablesInsert<"files">
       }
       isOpen={isOpen}
@@ -60,35 +56,33 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
 
             <Input
               type="file"
-              onChange={handleSelectedFiles}
+              onChange={handleSelectedFile}
               accept={ACCEPTED_FILE_TYPES}
               multiple
             />
           </div>
-          {selectedFiles.length === 1 && (
-            <div className="space-y-1">
-              <Label>Name</Label>
 
-              <Input
-                placeholder="File name..."
-                value={name}
-                onChange={e => setName(e.target.value)}
-                maxLength={FILE_NAME_MAX}
-              />
-            </div>
-          )}
-          {selectedFiles.length === 1 && (
-            <div className="space-y-1">
-              <Label>Description</Label>
+          <div className="space-y-1">
+            <Label>Name</Label>
 
-              <Input
-                placeholder="File description..."
-                value={name}
-                onChange={e => setDescription(e.target.value)}
-                maxLength={FILE_DESCRIPTION_MAX}
-              />
-            </div>
-          )}
+            <Input
+              placeholder="File name..."
+              value={name}
+              onChange={e => setName(e.target.value)}
+              maxLength={FILE_NAME_MAX}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <Label>Description</Label>
+
+            <Input
+              placeholder="File description..."
+              value={name}
+              onChange={e => setDescription(e.target.value)}
+              maxLength={FILE_DESCRIPTION_MAX}
+            />
+          </div>
         </>
       )}
     />

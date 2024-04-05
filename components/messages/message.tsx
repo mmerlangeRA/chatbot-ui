@@ -23,12 +23,13 @@ import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 import { MessageActions } from "./message-actions"
 import { MessageMarkdown } from "./message-markdown"
+import { Chunk } from "../interfaces"
 
 const ICON_SIZE = 32
 
 interface MessageProps {
   message: Tables<"messages">
-  fileItems: Tables<"file_items">[]
+  fileItems: Chunk[]
   isEditing: boolean
   isLast: boolean
   onStartEdit: (message: Tables<"messages">) => void
@@ -73,8 +74,7 @@ export const Message: FC<MessageProps> = ({
   const [selectedImage, setSelectedImage] = useState<MessageImage | null>(null)
 
   const [showFileItemPreview, setShowFileItemPreview] = useState(false)
-  const [selectedFileItem, setSelectedFileItem] =
-    useState<Tables<"file_items"> | null>(null)
+  const [selectedFileItem, setSelectedFileItem] = useState<Chunk | null>(null)
 
   const [viewSources, setViewSources] = useState(false)
 

@@ -1,3 +1,4 @@
+import { Chunk } from "@/components/interfaces"
 import { Tables } from "@/supabase/types"
 import { ChatPayload, MessageImage } from "@/types"
 import { encode } from "gpt-tokenizer"
@@ -72,7 +73,7 @@ export async function buildFinalMessages(
         .map(fileItemId =>
           chatFileItems.find(chatFileItem => chatFileItem.id === fileItemId)
         )
-        .filter(item => item !== undefined) as Tables<"file_items">[]
+        .filter(item => item !== undefined) as Chunk[]
 
       const retrievalText = buildRetrievalText(findFileItems)
 
@@ -211,7 +212,7 @@ export async function buildFinalMessages(
   return finalMessages
 }
 
-function buildRetrievalText(fileItems: Tables<"file_items">[]) {
+function buildRetrievalText(fileItems: Chunk[]) {
   const retrievalText = fileItems
     .map(item => `<BEGIN SOURCE>\n${item.content}\n</END SOURCE>`)
     .join("\n\n")

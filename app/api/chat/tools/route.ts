@@ -33,6 +33,13 @@ export async function POST(request: Request) {
         const convertedSchema = await openapiToFunctions(
           JSON.parse(selectedTool.schema as string)
         )
+        console.log("trying " + selectedTool.name)
+        console.log(JSON.stringify(convertedSchema))
+        console.log(convertedSchema.functions[0].function)
+        console.log(
+          convertedSchema.functions[0].function.parameters.properties
+            .requestBody
+        )
         const tools = convertedSchema.functions || []
         allTools = allTools.concat(tools)
 
@@ -70,6 +77,7 @@ export async function POST(request: Request) {
     const toolCalls = message.tool_calls || []
 
     if (toolCalls.length === 0) {
+      console.log("no tool calls")
       return new Response(message.content, {
         headers: {
           "Content-Type": "application/json"
@@ -79,6 +87,7 @@ export async function POST(request: Request) {
 
     if (toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
+        console.log("moving on callings")
         const functionCall = toolCall.function
         const functionName = functionCall.name
         const argumentsString = toolCall.function.arguments.trim()
@@ -140,10 +149,13 @@ export async function POST(request: Request) {
           }
 
           const fullUrl = schemaDetail.url + path
+          console.log("full url " + fullUrl)
 
           //console.log("calling " + fullUrl)
 
           const bodyContent = parsedArgs.requestBody || parsedArgs
+
+          console.log(bodyContent)
 
           const requestInit = {
             method: "POST",
@@ -158,6 +170,7 @@ export async function POST(request: Request) {
             data = {
               error: response.statusText
             }
+            console.log(data)
           } else {
             data = await response.json()
           }

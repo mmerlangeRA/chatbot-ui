@@ -40,12 +40,17 @@ export const ChatFilesDisplay: FC<ChatFilesDisplayProps> = ({}) => {
     chatImages,
     setChatImages,
     setChatFiles,
-    setUseRetrieval
+    setUseRetrieval,
+    selectedAssistant
   } = useContext(ChatbotUIContext)
 
   const [selectedFile, setSelectedFile] = useState<ChatFile | null>(null)
   const [selectedImage, setSelectedImage] = useState<MessageImage | null>(null)
   const [showPreview, setShowPreview] = useState(false)
+
+  if (selectedAssistant) {
+    setShowFilesDisplay(false)
+  }
 
   const messageImages = [
     ...newMessageImages.filter(

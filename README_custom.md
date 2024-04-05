@@ -1,7 +1,14 @@
 # Fork
+
 This is fork from https://github.com/mckaywrigley/chatbot-ui/
 
+## change in fonctionnalities
+
+If there is a tool, then attached files are ignored for automatic retrieval : we consider it is up to AI to know what to do with these documents.
+
+
 ## update 
+
 git fetch upstream
 git checkout main
 git merge upstream/main

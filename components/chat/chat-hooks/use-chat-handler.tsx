@@ -21,6 +21,7 @@ import {
   processResponse,
   validateChatSettings
 } from "../chat-helpers"
+import { Chunk } from "@/components/interfaces"
 
 export const useChatHandler = () => {
   const router = useRouter()
@@ -231,7 +232,7 @@ export const useChatHandler = () => {
 
       const b64Images = newMessageImages.map(image => image.base64)
 
-      let retrievedFileItems: Tables<"file_items">[] = []
+      let retrievedFileItems: Chunk[] = []
 
       if (
         (newMessageFiles.length > 0 || chatFiles.length > 0) &&

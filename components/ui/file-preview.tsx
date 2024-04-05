@@ -6,10 +6,11 @@ import Image from "next/image"
 import { FC } from "react"
 import { DrawingCanvas } from "../utility/drawing-canvas"
 import { Dialog, DialogContent } from "./dialog"
+import { Chunk } from "../interfaces"
 
 interface FilePreviewProps {
   type: "image" | "file" | "file_item"
-  item: ChatFile | MessageImage | Tables<"file_items">
+  item: ChatFile | MessageImage | Chunk
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
@@ -48,10 +49,11 @@ export const FilePreview: FC<FilePreviewProps> = ({
               />
             )
           } else if (type === "file_item") {
-            const fileItem = item as Tables<"file_items">
+            const fileItem = item as Chunk
             return (
               <div className="bg-background text-primary h-[50vh] min-w-[700px] overflow-auto whitespace-pre-wrap rounded-xl p-4">
                 <div>{fileItem.content}</div>
+                <div>page:{fileItem.page + 1}</div>
               </div>
             )
           } else if (type === "file") {

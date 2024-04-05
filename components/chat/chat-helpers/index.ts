@@ -1,5 +1,6 @@
 // Only used in use-chat-handler.tsx to keep it clean
 
+import { Chunk } from "@/components/interfaces"
 import { createChatFiles } from "@/db/chat-files"
 import { createChat } from "@/db/chats"
 import { createMessageFileItems } from "@/db/message-file-items"
@@ -73,9 +74,9 @@ export const handleRetrieval = async (
   }
 
   const { results } = (await response.json()) as {
-    results: Tables<"file_items">[]
+    results: Chunk[]
   }
-
+  console.log(results)
   return results
 }
 
@@ -396,11 +397,9 @@ export const handleCreateMessages = async (
   generatedText: string,
   newMessageImages: MessageImage[],
   isRegeneration: boolean,
-  retrievedFileItems: Tables<"file_items">[],
+  retrievedFileItems: Chunk[],
   setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>,
-  setChatFileItems: React.Dispatch<
-    React.SetStateAction<Tables<"file_items">[]>
-  >,
+  setChatFileItems: React.Dispatch<React.SetStateAction<Chunk[]>>,
   setChatImages: React.Dispatch<React.SetStateAction<MessageImage[]>>,
   selectedAssistant: Tables<"assistants"> | null
 ) => {
@@ -488,7 +487,7 @@ export const handleCreateMessages = async (
         }
       })
     )
-
+    console.log("createdMessageFileItems", createdMessageFileItems)
     finalChatMessages = [
       ...chatMessages,
       {
@@ -500,12 +499,13 @@ export const handleCreateMessages = async (
         fileItems: retrievedFileItems.map(fileItem => fileItem.id)
       }
     ]
+    console.log("finalChatMessages", finalChatMessages)
 
     setChatFileItems(prevFileItems => {
       const newFileItems = retrievedFileItems.filter(
         fileItem => !prevFileItems.some(prevItem => prevItem.id === fileItem.id)
       )
-
+      console.log("newFileItems", newFileItems)
       return [...prevFileItems, ...newFileItems]
     })
 

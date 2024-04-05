@@ -76,8 +76,8 @@ interface ChatbotUIContext {
   setChatSettings: Dispatch<SetStateAction<ChatSettings>>
   selectedChat: Tables<"chats"> | null
   setSelectedChat: Dispatch<SetStateAction<Tables<"chats"> | null>>
-  chatFileItems: Tables<"file_items">[]
-  setChatFileItems: Dispatch<SetStateAction<Tables<"file_items">[]>>
+  chatFileItems: Chunk[]
+  setChatFileItems: Dispatch<SetStateAction<Chunk[]>>
 
   // ACTIVE CHAT STORE
   abortController: AbortController | null
