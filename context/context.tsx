@@ -11,6 +11,7 @@ import {
 import { AssistantImage } from "@/types/images/assistant-image"
 import { VALID_ENV_KEYS } from "@/types/valid-keys"
 import { Dispatch, SetStateAction, createContext } from "react"
+import { Chunk } from "@/components/interfaces"
 
 interface ChatbotUIContext {
   // PROFILE STORE

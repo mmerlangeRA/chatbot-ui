@@ -41,6 +41,7 @@ export const deleteFileFromStorage = async (filePath: string) => {
 }
 
 export const getFileFromStorage = async (filePath: string) => {
+  console.log("filePath", filePath)
   const { data, error } = await supabase.storage
     .from("files")
     .createSignedUrl(filePath, 60 * 60 * 24) // 24hrs
@@ -48,6 +49,6 @@ export const getFileFromStorage = async (filePath: string) => {
   if (error) {
     throw new Error("Error downloading file")
   }
-
+  console.log("data", data)
   return data.signedUrl
 }

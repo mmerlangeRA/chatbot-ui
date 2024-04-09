@@ -247,7 +247,6 @@ export const useChatHandler = () => {
           chatSettings!.embeddingsProvider,
           sourceCount
         )
-        console.log("retrievedFileItems", retrievedFileItems)
       }
 
       const { tempUserChatMessage, tempAssistantChatMessage } =
@@ -294,6 +293,11 @@ export const useChatHandler = () => {
             selectedTools
           })
         })
+
+        const encodedArray = response.headers.get("fileitems") as string
+        retrievedFileItems = JSON.parse(
+          Buffer.from(encodedArray, "base64").toString("utf-8")
+        )
 
         setToolInUse("none")
 
@@ -365,7 +369,6 @@ export const useChatHandler = () => {
           return updatedChats
         })
       }
-
       await handleCreateMessages(
         chatMessages,
         currentChat,

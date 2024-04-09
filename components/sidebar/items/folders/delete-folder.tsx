@@ -84,6 +84,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     if (!setStateFunction) return
 
     const { error } = await supabase
+      //@ts-ignore
       .from(contentType)
       .delete()
       .eq("folder_id", folder.id)

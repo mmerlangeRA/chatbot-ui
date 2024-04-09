@@ -82,7 +82,7 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     }, 200) // FIX: hacky
     if (selectedAssistant) {
       setInputMessagePlaceholder(
-        `Ask mee anything. Type "@" for assistants, "/" for prompts, "#" for files.`
+        `Ask me anything. Type "@" for assistants, "/" for prompts, "#" for files.`
       )
     } else {
       setInputMessagePlaceholder(

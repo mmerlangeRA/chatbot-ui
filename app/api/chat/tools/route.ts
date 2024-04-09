@@ -65,7 +65,8 @@ export async function POST(request: Request) {
         console.error("Error converting schema", error)
       }
     }
-
+    //console.log(messages)
+    //console.log(allTools)
     const firstResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
@@ -74,6 +75,7 @@ export async function POST(request: Request) {
 
     const message = firstResponse.choices[0].message
     messages.push(message)
+    //console.log(message)
     const toolCalls = message.tool_calls || []
 
     if (toolCalls.length === 0) {
@@ -84,7 +86,7 @@ export async function POST(request: Request) {
         }
       })
     }
-
+    let data = {}
     if (toolCalls.length > 0) {
       for (const toolCall of toolCalls) {
         console.log("moving on callings")
@@ -126,7 +128,7 @@ export async function POST(request: Request) {
 
         // Determine if the request should be in the body or as a query
         const isRequestInBody = schemaDetail.requestInBody
-        let data = {}
+
         if (isRequestInBody) {
           // If the type is set to body
           let headers = {
@@ -164,17 +166,17 @@ export async function POST(request: Request) {
           }
 
           const response = await fetch(fullUrl, requestInit)
-          //console.log("GOT RESPONSE FROM POST TOOL")
+          console.log("GOT RESPONSE FROM POST TOOL")
 
           if (!response.ok) {
             data = {
               error: response.statusText
             }
-            console.log(data)
+            //console.log(data)
           } else {
             data = await response.json()
           }
-          //console.log(data)
+          console.log(data)
         } else {
           // If the type is set to query
           const queryParams = new URLSearchParams(
@@ -204,7 +206,6 @@ export async function POST(request: Request) {
           } else {
             data = await response.json()
           }
-          //console.log(data)
         }
 
         messages.push({
@@ -215,17 +216,26 @@ export async function POST(request: Request) {
         })
       }
     }
-    //console.log("sending")
-    //console.log(messages)
+
     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
       stream: true
     })
 
+    //messageFileItems
+
     const stream = OpenAIStream(secondResponse)
 
-    return new StreamingTextResponse(stream)
+    const response = new Response(stream)
+    //console.log(data)
+    if (Array.isArray(data) && data.length > 0 && data[0].page) {
+      const serializedArray = JSON.stringify(data)
+      const base64EncodedArray = Buffer.from(serializedArray).toString("base64")
+      response.headers.set("fileitems", base64EncodedArray)
+    }
+
+    return response
   } catch (error: any) {
     console.error(error)
     const errorMessage = error.error?.message || "An unexpected error occurred"
