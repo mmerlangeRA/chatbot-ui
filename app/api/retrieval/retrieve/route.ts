@@ -38,11 +38,13 @@ export async function POST(request: Request) {
         source_count: sourceCount
       })
     })
+
     if (!response.ok) {
       throw new Error(response.statusText)
     }
     let mostSimilarChunks = await response.json()
     return new Response(JSON.stringify(mostSimilarChunks), {
+
       status: 200
     })
   } catch (error: any) {

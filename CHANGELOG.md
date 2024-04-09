@@ -7,3 +7,4 @@
 * check and fix sanofi on dev
 
 * if tool returns an array with first element having a page attribute, then the return is considered a list of chunks
+
