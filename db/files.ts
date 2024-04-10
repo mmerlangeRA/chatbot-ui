@@ -37,6 +37,20 @@ export const getFileWorkspacesByWorkspaceId = async (workspaceId: string) => {
   return workspace
 }
 
+export const getFileWorkspacesByWorkspaceIdOrPublic = async (
+  workspaceId: string
+) => {
+  const { data: files, error } = await supabase.rpc("get_files", {
+    workspaceid: workspaceId
+  })
+
+  if (!files) {
+    throw new Error(error.message)
+  }
+
+  return files
+}
+
 export const getFileWorkspacesByFileId = async (fileId: string) => {
   const { data: file, error } = await supabase
     .from("files")

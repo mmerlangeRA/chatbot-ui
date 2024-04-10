@@ -211,6 +211,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
         selectedWorkspace.id
       )
       if (newItem_or_Items && Array.isArray(newItem_or_Items)) {
+        console.log("newItem_or_Items", newItem_or_Items)
         setStateFunction((prevItems: any) => [
           ...prevItems,
           ...newItem_or_Items

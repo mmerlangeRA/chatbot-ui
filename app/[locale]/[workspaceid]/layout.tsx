@@ -2,16 +2,10 @@
 
 import { Dashboard } from "@/components/ui/dashboard"
 import { ChatbotUIContext } from "@/context/context"
-import {
-  getAssistantWorkspacesByWorkspaceId,
-  getAssistantWorkspacesByWorkspaceIdOrPublic
-} from "@/db/assistants"
+import { getAssistantWorkspacesByWorkspaceIdOrPublic } from "@/db/assistants"
 import { getChatsByWorkspaceId } from "@/db/chats"
-import {
-  getCollectionWorkspacesByWorkspaceId,
-  getCollectionWorkspacesByWorkspaceIdOrPublic
-} from "@/db/collections"
-import { getFileWorkspacesByWorkspaceId } from "@/db/files"
+import { getCollectionWorkspacesByWorkspaceIdOrPublic } from "@/db/collections"
+import { getFileWorkspacesByWorkspaceIdOrPublic } from "@/db/files"
 import { getFoldersByWorkspaceId } from "@/db/folders"
 import { getModelWorkspacesByWorkspaceId } from "@/db/models"
 import { getPresetWorkspacesByWorkspaceId } from "@/db/presets"
@@ -99,11 +93,8 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const workspace = await getWorkspaceById(workspaceId)
     setSelectedWorkspace(workspace)
 
-    const allowPublicAssistants =
-      process.env.NEXT_PUBLIC_ALLOW_PUBLIC_ASSISTANTS == "true"
-    const assistants = allowPublicAssistants
-      ? await getAssistantWorkspacesByWorkspaceIdOrPublic(workspaceId)
-      : (await getAssistantWorkspacesByWorkspaceId(workspaceId)).assistants
+    const assistants =
+      await getAssistantWorkspacesByWorkspaceIdOrPublic(workspaceId)
 
     setAssistants(assistants)
 
@@ -144,19 +135,15 @@ export default function WorkspaceLayout({ children }: WorkspaceLayoutProps) {
     const chats = await getChatsByWorkspaceId(workspaceId)
     setChats(chats)
 
-    const allowPublicCollections =
-      process.env.NEXT_PUBLIC_ALLOW_PUBLIC_COLLECTIONS == "true"
-    const collections = allowPublicCollections
-      ? await getCollectionWorkspacesByWorkspaceIdOrPublic(workspaceId)
-      : (await getCollectionWorkspacesByWorkspaceId(workspaceId)).collections
-
+    const collections =
+      await getCollectionWorkspacesByWorkspaceIdOrPublic(workspaceId)
     setCollections(collections)
 
     const folders = await getFoldersByWorkspaceId(workspaceId)
     setFolders(folders)
 
-    const fileData = await getFileWorkspacesByWorkspaceId(workspaceId)
-    setFiles(fileData.files)
+    const files = await getFileWorkspacesByWorkspaceIdOrPublic(workspaceId)
+    setFiles(files)
 
     const presetData = await getPresetWorkspacesByWorkspaceId(workspaceId)
     setPresets(presetData.presets)

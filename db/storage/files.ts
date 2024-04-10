@@ -41,14 +41,20 @@ export const deleteFileFromStorage = async (filePath: string) => {
 }
 
 export const getFileFromStorage = async (filePath: string) => {
-  console.log("filePath", filePath)
+  const expiresIn =
+    parseInt(process.env.NEXT_PUBLIC_SIGNED_IN_FILE_EXPIRE_IN || "") | 86400
+  const isPublicURL = process.env.NEXT_PUBLIC_FILE_URL == "true"
+  if (isPublicURL) {
+    const { data } = await supabase.storage.from("files").getPublicUrl(filePath)
+
+    return data.publicUrl
+  }
   const { data, error } = await supabase.storage
     .from("files")
-    .createSignedUrl(filePath, 60 * 60 * 24) // 24hrs
+    .createSignedUrl(filePath, expiresIn)
 
   if (error) {
     throw new Error("Error downloading file")
   }
-  console.log("data", data)
   return data.signedUrl
 }

@@ -16,6 +16,11 @@ export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
   const [name, setName] = useState(collection.name)
   const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState(collection.description)
+  const [sharing, setSharing] = useState(collection.sharing)
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   const handleFileSelect = (
     file: CollectionFile,
@@ -44,6 +49,7 @@ export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
       icon={<IconBooks size={30} />}
       updateState={{
         name,
+        sharing,
         description
       }}
       renderInputs={(renderState: {
@@ -97,6 +103,16 @@ export const CollectionItem: FC<CollectionItemProps> = ({ collection }) => {
                 onChange={e => setName(e.target.value)}
                 maxLength={COLLECTION_NAME_MAX}
               />
+            </div>
+            <div className="space-y-1">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={sharing === "public"}
+                  onChange={handleCheckboxChange}
+                />
+                Public
+              </label>
             </div>
 
             <div className="space-y-1">

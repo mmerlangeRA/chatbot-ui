@@ -155,6 +155,7 @@ export const updateAssistant = async (
   assistantId: string,
   assistant: TablesUpdate<"assistants">
 ) => {
+  console.log("assistant", assistant)
   const { data: updatedAssistant, error } = await supabase
     .from("assistants")
     .update(assistant)

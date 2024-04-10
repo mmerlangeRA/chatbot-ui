@@ -81,7 +81,6 @@ import { convertBlobToBase64 } from "@/lib/blob-to-b64"
 import { Tables, TablesUpdate } from "@/supabase/types"
 import { CollectionFile, ContentType, DataItemType } from "@/types"
 import { FC, useContext, useEffect, useRef, useState } from "react"
-import profile from "react-syntax-highlighter/dist/esm/languages/hljs/profile"
 import { toast } from "sonner"
 import { SidebarDeleteItem } from "./sidebar-delete-item"
 
@@ -113,8 +112,11 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     setAssistants,
     setTools,
     setModels,
-    setAssistantImages
+    setAssistantImages,
+    profile
   } = useContext(ChatbotUIContext)
+
+  const isMine = item.user_id == profile?.user_id
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -369,9 +371,51 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
 
       return updatedFile
     },
-    collections: async (collectionId: string) => {
-      const item = await getCollectionWorkspacesByCollectionId(collectionId)
-      return item.workspaces
+    collections: async (
+      collectionId: string,
+      updateState: TablesUpdate<"collections">
+    ) => {
+      if (!profile) return
+
+      const { ...rest } = updateState
+
+      const filesToAdd = selectedCollectionFiles.filter(
+        selectedFile =>
+          !startingCollectionFiles.some(
+            startingFile => startingFile.id === selectedFile.id
+          )
+      )
+
+      const filesToRemove = startingCollectionFiles.filter(startingFile =>
+        selectedCollectionFiles.some(
+          selectedFile => selectedFile.id === startingFile.id
+        )
+      )
+
+      for (const file of filesToAdd) {
+        await createCollectionFile({
+          user_id: item.user_id,
+          collection_id: collectionId,
+          file_id: file.id
+        })
+      }
+
+      for (const file of filesToRemove) {
+        await deleteCollectionFile(collectionId, file.id)
+      }
+
+      const updatedCollection = await updateCollection(collectionId, rest)
+
+      await handleWorkspaceUpdates(
+        startingWorkspaces,
+        selectedWorkspaces,
+        collectionId,
+        deleteCollectionWorkspace,
+        createCollectionWorkspaces as any,
+        "collection_id"
+      )
+
+      return updatedCollection
     },
     assistants: async (
       assistantId: string,
@@ -619,19 +663,20 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
           </div>
         </div>
 
-        <SheetFooter className="mt-2 flex justify-between">
-          <SidebarDeleteItem item={item} contentType={contentType} />
+        {isMine && (
+          <SheetFooter className="mt-2 flex justify-between">
+            <SidebarDeleteItem item={item} contentType={contentType} />
+            <div className="flex grow justify-end space-x-2">
+              <Button variant="outline" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
 
-          <div className="flex grow justify-end space-x-2">
-            <Button variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
-            </Button>
-
-            <Button ref={buttonRef} onClick={handleUpdate}>
-              Save
-            </Button>
-          </div>
-        </SheetFooter>
+              <Button ref={buttonRef} onClick={handleUpdate}>
+                Save
+              </Button>
+            </div>
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   )
