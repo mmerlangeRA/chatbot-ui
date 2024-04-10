@@ -23,6 +23,7 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
   const [name, setName] = useState(assistant.name)
   const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState(assistant.description)
+  const [sharing, setSharing] = useState(assistant.sharing)
   const [assistantChatSettings, setAssistantChatSettings] = useState({
     model: assistant.model,
     prompt: assistant.prompt,
@@ -33,6 +34,10 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
   })
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imageLink, setImageLink] = useState("")
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   useEffect(() => {
     const assistantImage =
@@ -129,6 +134,7 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
         image: selectedImage,
         user_id: assistant.user_id,
         name,
+        sharing,
         description,
         include_profile_context: assistantChatSettings.includeProfileContext,
         include_workspace_instructions:
@@ -175,6 +181,16 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
               onChange={e => setName(e.target.value)}
               maxLength={ASSISTANT_NAME_MAX}
             />
+          </div>
+          <div className="space-y-1">
+            <label>
+              <input
+                type="checkbox"
+                checked={sharing === "public"}
+                onChange={handleCheckboxChange}
+              />
+              Public
+            </label>
           </div>
 
           <div className="space-y-1 pt-2">

@@ -22,6 +22,11 @@ export const ToolItem: FC<ToolItemProps> = ({ tool }) => {
   )
   const [schema, setSchema] = useState(tool.schema as string)
   const [schemaError, setSchemaError] = useState("")
+  const [sharing, setSharing] = useState(tool.sharing)
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   return (
     <SidebarItem
@@ -31,6 +36,7 @@ export const ToolItem: FC<ToolItemProps> = ({ tool }) => {
       icon={<IconBolt size={30} />}
       updateState={{
         name,
+        sharing,
         description,
         url,
         custom_headers: customHeaders,
@@ -47,6 +53,16 @@ export const ToolItem: FC<ToolItemProps> = ({ tool }) => {
               onChange={e => setName(e.target.value)}
               maxLength={TOOL_NAME_MAX}
             />
+          </div>
+          <div className="space-y-1">
+            <label>
+              <input
+                type="checkbox"
+                checked={sharing === "public"}
+                onChange={handleCheckboxChange}
+              />
+              Public
+            </label>
           </div>
 
           <div className="space-y-1">

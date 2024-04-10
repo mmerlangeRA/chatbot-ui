@@ -41,15 +41,11 @@ export const uploadAssistantImage = async (
 
 export const getAssistantImageFromStorage = async (filePath: string) => {
   try {
-    const { data, error } = await supabase.storage
+    const { data } = await supabase.storage
       .from("assistant_images")
-      .createSignedUrl(filePath, 60 * 60 * 24) // 24hrs
+      .getPublicUrl(filePath) // 24hrs
 
-    if (error) {
-      throw new Error("Error downloading assistant image")
-    }
-
-    return data.signedUrl
+    return data.publicUrl
   } catch (error) {
     console.error(error)
   }

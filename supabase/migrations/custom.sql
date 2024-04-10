@@ -24,3 +24,15 @@ CREATE POLICY "Read-only access for other users"
     ON assistant_files
     FOR SELECT
     USING (user_id <> auth.uid());
+
+
+CREATE OR REPLACE FUNCTION get_files(workspaceId UUID)
+RETURNS SETOF files AS $$
+BEGIN
+  RETURN QUERY
+  SELECT f.*
+  FROM files f
+  LEFT JOIN file_workspaces fw ON f.id = fw.assistant_id
+  WHERE f.sharing != 'private' OR fw.workspace_id = workspaceId;
+END;
+$$ LANGUAGE plpgsql STABLE;

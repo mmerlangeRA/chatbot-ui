@@ -1505,13 +1505,13 @@ export interface Database {
         }
         Returns: {
           id: string
-          created_at: string
-          updated_at: string | null
           user_id: string
           folder_id: string
+          created_at: string
+          updated_at: string | null
           sharing: string
-          name: string
           description: string
+          name: string
         }[]
       }
       get_assistants: {
@@ -1535,6 +1535,25 @@ export interface Database {
           prompt: string
           temperature: number
           context_length:number
+        }[]
+      }
+      get_files: {
+        Args: {
+          workspaceid: string
+        }
+        Returns: {
+          id: string
+          user_id: string
+          folder_id: string
+          created_at: string
+          updated_at: string | null
+          sharing: string
+          description: string
+          file_path: string
+          name: string
+          size: number
+          tokens:number
+          type: string
         }[]
       }
       create_duplicate_messages_for_new_chat: {

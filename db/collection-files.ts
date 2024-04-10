@@ -4,7 +4,6 @@ import { TablesInsert } from "@/supabase/types"
 export const getCollectionFilesByCollectionId = async (
   collectionId: string
 ) => {
-  console.log("collectionId", collectionId)
   const { data: collectionFiles, error } = await supabase
     .from("collections")
     .select(
@@ -18,34 +17,23 @@ export const getCollectionFilesByCollectionId = async (
     .single()
 
   if (!collectionFiles) {
-    console.log("NO collectionFiles")
     throw new Error(error.message)
   }
-  console.log("collectionFiles", collectionFiles)
+
   return collectionFiles
 }
 
 export const getCollectionFileIdsByCollectionId = async (
   collectionId: string
 ) => {
-  console.log("getCollectionFileIdsByCollectionId", collectionId)
-  /*   const { data, error } = await supabase
-    .from("collection_files")
-    .select()
-
-  console.log(data)
-  console.log(error)
-  const collectionFileIds = data */
   const { data: collectionFileIds, error } = await supabase
     .from("collection_files")
     .select(`file_id`)
     .eq("collection_id", collectionId)
 
   if (!collectionFileIds) {
-    console.log("NO collectionFiles")
     throw new Error(error.message)
   }
-  console.log("collectionFileIds", collectionFileIds)
   return collectionFileIds
 }
 
