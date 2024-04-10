@@ -7,29 +7,29 @@ import { FILE_DESCRIPTION_MAX, FILE_NAME_MAX } from "@/db/limits"
 import { TablesInsert } from "@/supabase/types"
 import { FC, useContext, useState } from "react"
 
-interface CreateFileProps {
+interface CreateFilesProps {
   isOpen: boolean
   onOpenChange: (isOpen: boolean) => void
 }
 
-export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
+export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
   const { profile, selectedWorkspace } = useContext(ChatbotUIContext)
 
   const [name, setName] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [selectedFiles, setSelectedFiles] = useState<File[] | []>([])
 
-  const handleSelectedFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelectedFiles = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (!e.target.files) return
 
+    setSelectedFiles(Array.from(e.target.files))
     const file = e.target.files[0]
-
     if (!file) return
-
     setSelectedFile(file)
-    const fileNameWithoutExtension = file.name.split(".").slice(0, -1).join(".")
-    setName(fileNameWithoutExtension)
   }
 
   if (!profile) return null
@@ -40,7 +40,7 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
       contentType="files"
       createState={
         {
-          file: selectedFile,
+          files: selectedFiles,
           user_id: profile.user_id,
           name,
           description,
@@ -60,32 +60,35 @@ export const CreateFile: FC<CreateFileProps> = ({ isOpen, onOpenChange }) => {
 
             <Input
               type="file"
-              onChange={handleSelectedFile}
+              onChange={handleSelectedFiles}
               accept={ACCEPTED_FILE_TYPES}
+              multiple
             />
           </div>
+          {selectedFiles.length === 1 && (
+            <div className="space-y-1">
+              <Label>Name</Label>
 
-          <div className="space-y-1">
-            <Label>Name</Label>
+              <Input
+                placeholder="File name..."
+                value={name}
+                onChange={e => setName(e.target.value)}
+                maxLength={FILE_NAME_MAX}
+              />
+            </div>
+          )}
+          {selectedFiles.length === 1 && (
+            <div className="space-y-1">
+              <Label>Description</Label>
 
-            <Input
-              placeholder="File name..."
-              value={name}
-              onChange={e => setName(e.target.value)}
-              maxLength={FILE_NAME_MAX}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <Label>Description</Label>
-
-            <Input
-              placeholder="File description..."
-              value={name}
-              onChange={e => setDescription(e.target.value)}
-              maxLength={FILE_DESCRIPTION_MAX}
-            />
-          </div>
+              <Input
+                placeholder="File description..."
+                value={name}
+                onChange={e => setDescription(e.target.value)}
+                maxLength={FILE_DESCRIPTION_MAX}
+              />
+            </div>
+          )}
         </>
       )}
     />

@@ -14,7 +14,7 @@ import { createAssistant, updateAssistant } from "@/db/assistants"
 import { createChat } from "@/db/chats"
 import { createCollectionFiles } from "@/db/collection-files"
 import { createCollection } from "@/db/collections"
-import { createFile } from "@/db/files"
+import { createFiles } from "@/db/files"
 import { createModel } from "@/db/models"
 import { createPreset } from "@/db/presets"
 import { createPrompt } from "@/db/prompts"
@@ -68,23 +68,6 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     presets: createPreset,
     prompts: createPrompt,
     files: async (
-      createState: { file: File } & TablesInsert<"files">,
-      workspaceId: string
-    ) => {
-      if (!selectedWorkspace) return
-
-      const { file, ...rest } = createState
-
-      const createdFile = await createFile(
-        file,
-        rest,
-        workspaceId,
-        selectedWorkspace.embeddings_provider as "openai" | "local"
-      )
-
-      return createdFile
-    },
-    batchFiles: async (
       createState: { files: File[] } & TablesInsert<"files">,
       workspaceId: string
     ) => {
@@ -92,22 +75,23 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
       if (!selectedWorkspace) return
 
       const { files, ...rest } = createState
-      const createdFiles = []
-      for (let i = 0; i < files.length; i++) {
+
+      const locals: TablesInsert<"files">[] = []
+      files.forEach(file => {
         let local = JSON.parse(JSON.stringify(rest))
-        local.name = files[i].name
-        local.size = files[i]?.size || 0
-        local.type = files[i]?.type || 0
+        local.name = file.name
+        local.size = file.size || 0
+        local.type = file.type || 0
         local.description = ""
-        const createdFile = await createFile(
-          files[i],
-          local,
-          workspaceId,
-          selectedWorkspace.embeddings_provider as "openai" | "local"
-        )
-        createdFiles.push(createdFile)
-        console.log(createdFile)
-      }
+        locals.push(local)
+      })
+
+      const createdFiles = await createFiles(
+        files,
+        locals,
+        workspaceId,
+        selectedWorkspace.embeddings_provider as "openai" | "local"
+      )
       return createdFiles
     },
     collections: async (
@@ -204,7 +188,6 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
     presets: setPresets,
     prompts: setPrompts,
     files: setFiles,
-    batchFiles: setFiles,
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
@@ -223,9 +206,20 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
 
       setCreating(true)
 
-      const newItem = await createFunction(createState, selectedWorkspace.id)
-
-      setStateFunction((prevItems: any) => [...prevItems, newItem])
+      const newItem_or_Items = await createFunction(
+        createState,
+        selectedWorkspace.id
+      )
+      if (contentType == "files") {
+        //@ts-ignore
+        setStateFunction((prevItems: any) => [
+          ...prevItems,
+          ...newItem_or_Items
+        ])
+      } else {
+        //@ts-ignore
+        setStateFunction((prevItems: any) => [...prevItems, newItem_or_Items])
+      }
 
       onOpenChange(false)
       setCreating(false)

@@ -73,10 +73,8 @@ export const handleRetrieval = async (
     console.error("Error retrieving:", response)
   }
 
-  const { results } = (await response.json()) as {
-    results: Chunk[]
-  }
-  console.log(results)
+  const results: Chunk[] = await response.json()
+  //console.log(results)
   return results
 }
 
@@ -263,7 +261,7 @@ export const fetchChatResponse = async (
     body: JSON.stringify(body),
     signal: controller.signal
   })
-  console.log(response)
+  //console.log(response)
   if (!response.ok) {
     if (response.status === 404 && !isHosted) {
       toast.error(
@@ -499,13 +497,12 @@ export const handleCreateMessages = async (
         fileItems: retrievedFileItems.map(fileItem => fileItem.id)
       }
     ]
-    console.log("finalChatMessages", finalChatMessages)
+    //console.log("finalChatMessages", finalChatMessages)
 
     setChatFileItems(prevFileItems => {
       const newFileItems = retrievedFileItems.filter(
         fileItem => !prevFileItems.some(prevItem => prevItem.id === fileItem.id)
       )
-      console.log("newFileItems", newFileItems)
       return [...prevFileItems, ...newFileItems]
     })
 

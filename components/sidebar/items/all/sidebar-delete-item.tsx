@@ -60,10 +60,6 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
       await deleteFileFromStorage(file.file_path)
       await deleteFile(file.id)
     },
-    batchFiles: async (file: Tables<"files">) => {
-      await deleteFileFromStorage(file.file_path)
-      await deleteFile(file.id)
-    },
     collections: async (collection: Tables<"collections">) => {
       await deleteCollection(collection.id)
     },
@@ -86,7 +82,6 @@ export const SidebarDeleteItem: FC<SidebarDeleteItemProps> = ({
     presets: setPresets,
     prompts: setPrompts,
     files: setFiles,
-    batchFiles: setFiles,
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,

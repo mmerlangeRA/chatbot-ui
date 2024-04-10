@@ -7,7 +7,7 @@ import { FC, useContext, useState } from "react"
 import { Button } from "../ui/button"
 import { CreateAssistant } from "./items/assistants/create-assistant"
 import { CreateCollection } from "./items/collections/create-collection"
-import { CreateFile } from "./items/files/create-file"
+import { CreateFiles } from "./items/files/create-files"
 import { CreateModel } from "./items/models/create-model"
 import { CreatePreset } from "./items/presets/create-preset"
 import { CreatePrompt } from "./items/prompts/create-prompt"
@@ -125,7 +125,7 @@ export const SidebarCreateButtons: FC<SidebarCreateButtonsProps> = ({
       )}
 
       {isCreatingFile && (
-        <CreateFile isOpen={isCreatingFile} onOpenChange={setIsCreatingFile} />
+        <CreateFiles isOpen={isCreatingFile} onOpenChange={setIsCreatingFile} />
       )}
 
       {isCreatingCollection && (
