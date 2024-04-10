@@ -3,7 +3,6 @@ export type ContentType =
   | "presets"
   | "prompts"
   | "files"
-  | "batchFiles"
   | "collections"
   | "assistants"
   | "tools"

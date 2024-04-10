@@ -210,14 +210,12 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
         createState,
         selectedWorkspace.id
       )
-      if (contentType == "files") {
-        //@ts-ignore
+      if (newItem_or_Items && Array.isArray(newItem_or_Items)) {
         setStateFunction((prevItems: any) => [
           ...prevItems,
           ...newItem_or_Items
         ])
       } else {
-        //@ts-ignore
         setStateFunction((prevItems: any) => [...prevItems, newItem_or_Items])
       }
 
