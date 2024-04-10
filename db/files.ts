@@ -119,26 +119,24 @@ export const createFile = async (
 }
 
 export const createFiles = async (
-  files: TablesInsert<"files">[],
-  workspace_id: string
+  files: File[],
+  fileRecords: TablesInsert<"files">[],
+  workspace_id: string,
+  embeddingsProvider: "openai" | "local"
 ) => {
-  const { data: createdFiles, error } = await supabase
-    .from("files")
-    .insert(files)
-    .select("*")
-
-  if (error) {
-    throw new Error(error.message)
+  const nbFiles = files.length
+  const createdFiles = []
+  for (let i = 0; i < nbFiles; i++) {
+    const file = files[i]
+    const fileRecord = fileRecords[i]
+    const createdFile = await createFile(
+      file,
+      fileRecord,
+      workspace_id,
+      embeddingsProvider
+    )
+    createdFiles.push(createdFile)
   }
-
-  await createFileWorkspaces(
-    createdFiles.map(file => ({
-      user_id: file.user_id,
-      file_id: file.id,
-      workspace_id
-    }))
-  )
-
   return createdFiles
 }
 
