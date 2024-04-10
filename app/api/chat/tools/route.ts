@@ -1,3 +1,4 @@
+import { Chunk } from "@/components/interfaces"
 import { openapiToFunctions } from "@/lib/openapi-conversion"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Tables } from "@/supabase/types"
@@ -5,6 +6,14 @@ import { ChatSettings } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import OpenAI from "openai"
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
+
+function removeDuplicateChunks(chunks: Chunk[]) {
+  const uniqueChunks = new Map()
+  for (const chunk of chunks) {
+    uniqueChunks.set(chunk.id, chunk)
+  }
+  return Array.from(uniqueChunks.values())
+}
 
 export async function POST(request: Request) {
   const json = await request.json()
@@ -16,7 +25,7 @@ export async function POST(request: Request) {
 
   try {
     const profile = await getServerProfile()
-
+    let sources: Chunk[] = []
     checkApiKey(profile.openai_api_key, "OpenAI")
 
     const openai = new OpenAI({
@@ -65,7 +74,8 @@ export async function POST(request: Request) {
         console.error("Error converting schema", error)
       }
     }
-
+    //console.log(messages)
+    //console.log(allTools)
     const firstResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
@@ -74,6 +84,7 @@ export async function POST(request: Request) {
 
     const message = firstResponse.choices[0].message
     messages.push(message)
+    //console.log(message)
     const toolCalls = message.tool_calls || []
 
     if (toolCalls.length === 0) {
@@ -84,8 +95,9 @@ export async function POST(request: Request) {
         }
       })
     }
-
+    let data = {}
     if (toolCalls.length > 0) {
+      console.log("I will call " + toolCalls.length + " tools")
       for (const toolCall of toolCalls) {
         console.log("moving on callings")
         const functionCall = toolCall.function
@@ -126,7 +138,7 @@ export async function POST(request: Request) {
 
         // Determine if the request should be in the body or as a query
         const isRequestInBody = schemaDetail.requestInBody
-        let data = {}
+
         if (isRequestInBody) {
           // If the type is set to body
           let headers = {
@@ -164,17 +176,19 @@ export async function POST(request: Request) {
           }
 
           const response = await fetch(fullUrl, requestInit)
-          //console.log("GOT RESPONSE FROM POST TOOL")
+          console.log(
+            "##################################GOT RESPONSE FROM POST TOOL!"
+          )
 
           if (!response.ok) {
             data = {
               error: response.statusText
             }
-            console.log(data)
+            //console.log(data)
           } else {
             data = await response.json()
           }
-          //console.log(data)
+          console.log(data)
         } else {
           // If the type is set to query
           const queryParams = new URLSearchParams(
@@ -204,7 +218,12 @@ export async function POST(request: Request) {
           } else {
             data = await response.json()
           }
-          //console.log(data)
+        }
+
+        if (Array.isArray(data) && data.length > 0 && data[0].file_id) {
+          console.log("adding " + data.length)
+          sources = sources.concat(data)
+          console.log("now " + sources.length)
         }
 
         messages.push({
@@ -215,8 +234,7 @@ export async function POST(request: Request) {
         })
       }
     }
-    //console.log("sending")
-    //console.log(messages)
+    console.log("Sending for secondResponse")
     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
@@ -225,7 +243,18 @@ export async function POST(request: Request) {
 
     const stream = OpenAIStream(secondResponse)
 
-    return new StreamingTextResponse(stream)
+    const response = new StreamingTextResponse(stream)
+    console.log(response)
+
+    //console.log(data)
+    if (sources.length > 0) {
+      const uniqueSources = removeDuplicateChunks(sources)
+      const serializedArray = JSON.stringify(uniqueSources)
+      const base64EncodedArray = Buffer.from(serializedArray).toString("base64")
+      response.headers.set("fileitems", base64EncodedArray)
+    }
+    console.log("returning response")
+    return response
   } catch (error: any) {
     console.error(error)
     const errorMessage = error.error?.message || "An unexpected error occurred"

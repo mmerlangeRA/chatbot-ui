@@ -47,7 +47,6 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     presets: setPresets,
     prompts: setPrompts,
     files: setFiles,
-    batchFiles: setFiles,
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,

@@ -175,7 +175,6 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     presets: null,
     prompts: null,
     files: null,
-    batchFiles: null,
     collections: {
       startingCollectionFiles,
       setStartingCollectionFiles,
@@ -205,7 +204,6 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     presets: null,
     prompts: null,
     files: null,
-    batchFiles: null,
     collections: async (collectionId: string) => {
       const collectionFiles =
         await getCollectionFilesByCollectionId(collectionId)
@@ -242,10 +240,6 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
       return item.workspaces
     },
     files: async (fileId: string) => {
-      const item = await getFileWorkspacesByFileId(fileId)
-      return item.workspaces
-    },
-    batchFiles: async (fileId: string) => {
       const item = await getFileWorkspacesByFileId(fileId)
       return item.workspaces
     },
@@ -375,52 +369,9 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
 
       return updatedFile
     },
-    batchFiles: null,
-    collections: async (
-      collectionId: string,
-      updateState: TablesUpdate<"assistants">
-    ) => {
-      if (!profile) return
-
-      const { ...rest } = updateState
-
-      const filesToAdd = selectedCollectionFiles.filter(
-        selectedFile =>
-          !startingCollectionFiles.some(
-            startingFile => startingFile.id === selectedFile.id
-          )
-      )
-
-      const filesToRemove = startingCollectionFiles.filter(startingFile =>
-        selectedCollectionFiles.some(
-          selectedFile => selectedFile.id === startingFile.id
-        )
-      )
-
-      for (const file of filesToAdd) {
-        await createCollectionFile({
-          user_id: item.user_id,
-          collection_id: collectionId,
-          file_id: file.id
-        })
-      }
-
-      for (const file of filesToRemove) {
-        await deleteCollectionFile(collectionId, file.id)
-      }
-
-      const updatedCollection = await updateCollection(collectionId, rest)
-
-      await handleWorkspaceUpdates(
-        startingWorkspaces,
-        selectedWorkspaces,
-        collectionId,
-        deleteCollectionWorkspace,
-        createCollectionWorkspaces as any,
-        "collection_id"
-      )
-
-      return updatedCollection
+    collections: async (collectionId: string) => {
+      const item = await getCollectionWorkspacesByCollectionId(collectionId)
+      return item.workspaces
     },
     assistants: async (
       assistantId: string,
@@ -583,7 +534,6 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
     presets: setPresets,
     prompts: setPrompts,
     files: setFiles,
-    batchFiles: setFiles,
     collections: setCollections,
     assistants: setAssistants,
     tools: setTools,
