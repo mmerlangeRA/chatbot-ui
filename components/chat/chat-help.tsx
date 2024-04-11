@@ -31,43 +31,6 @@ export const ChatHelp: FC<ChatHelpProps> = ({}) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="flex items-center justify-between">
-          <div className="flex space-x-2">
-            <Link
-              className="cursor-pointer hover:opacity-50"
-              href="https://twitter.com/ChatbotUI"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconBrandX />
-            </Link>
-
-            <Link
-              className="cursor-pointer hover:opacity-50"
-              href="https://github.com/mckaywrigley/chatbot-ui"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconBrandGithub />
-            </Link>
-          </div>
-
-          <div className="flex space-x-2">
-            <Announcements />
-
-            <Link
-              className="cursor-pointer hover:opacity-50"
-              href="/help"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <IconHelpCircle size={24} />
-            </Link>
-          </div>
-        </DropdownMenuLabel>
-
-        <DropdownMenuSeparator />
-
         <DropdownMenuItem className="flex justify-between">
           <div>Show Help</div>
           <div className="flex opacity-60">

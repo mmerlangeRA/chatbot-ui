@@ -1,0 +1,16 @@
+{
+  "Ask anything. Type \"/\" for prompts, \"@\" for files, and \"#\" for tools": "Demandez quelque chose. Tapez \"/\" pour choisir un prompt, \"@\" pour un fichier, et \"#\" pour un outil.",
+  "Ask anything. Type \"/\" for prompts, \"@\" for files": "Demandez quelque chose. Tapez \"/\" pour choisir un prompt, \"@\" pour un fichier",
+  "Quick Settings": "Réglages rapides",
+  "Search files": "Chercher",
+  "Name": "Nom",
+  "Delete": "Supprimer",
+  "Save": "Sauver",
+  "Cancel": "Annuler",
+  "New": "Nouveau",
+  "Search": "Recherche",
+  "Edit":"Editer",
+  "Are you sure you want to delete": "Êtes-vous sûr de vouloir supprimer",
+  "Search models": "Recherche modèles",
+  "Prompt name": "Nom du prompt"
+}

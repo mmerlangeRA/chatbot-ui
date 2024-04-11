@@ -83,6 +83,7 @@ import { CollectionFile, ContentType, DataItemType } from "@/types"
 import { FC, useContext, useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { SidebarDeleteItem } from "./sidebar-delete-item"
+import { useTranslation } from "react-i18next"
 
 interface SidebarUpdateItemProps {
   isTyping: boolean
@@ -117,6 +118,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
   } = useContext(ChatbotUIContext)
 
   const isMine = item.user_id == profile?.user_id
+  const { t } = useTranslation()
 
   const buttonRef = useRef<HTMLButtonElement>(null)
 
@@ -643,7 +645,7 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
         <div className="grow overflow-auto">
           <SheetHeader>
             <SheetTitle className="text-2xl font-bold">
-              Edit {contentType.slice(0, -1)}
+              {t("Edit")} {contentType.slice(0, -1)}
             </SheetTitle>
           </SheetHeader>
 
@@ -668,11 +670,11 @@ export const SidebarUpdateItem: FC<SidebarUpdateItemProps> = ({
             <SidebarDeleteItem item={item} contentType={contentType} />
             <div className="flex grow justify-end space-x-2">
               <Button variant="outline" onClick={() => setIsOpen(false)}>
-                Cancel
+                {t("Cancel")}
               </Button>
 
               <Button ref={buttonRef} onClick={handleUpdate}>
-                Save
+                {t("Save")}
               </Button>
             </div>
           </SheetFooter>

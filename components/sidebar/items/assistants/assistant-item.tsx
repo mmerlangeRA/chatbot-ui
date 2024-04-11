@@ -12,12 +12,14 @@ import profile from "react-syntax-highlighter/dist/esm/languages/hljs/profile"
 import { SidebarItem } from "../all/sidebar-display-item"
 import { AssistantRetrievalSelect } from "./assistant-retrieval-select"
 import { AssistantToolSelect } from "./assistant-tool-select"
+import { useTranslation } from "react-i18next"
 
 interface AssistantItemProps {
   assistant: Tables<"assistants">
 }
 
 export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
+  const { t, i18n } = useTranslation()
   const { selectedWorkspace, assistantImages } = useContext(ChatbotUIContext)
 
   const [name, setName] = useState(assistant.name)
@@ -173,7 +175,7 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
       }) => (
         <>
           <div className="space-y-1">
-            <Label>Name</Label>
+            <Label>{t("Name")}</Label>
 
             <Input
               placeholder="Assistant name..."

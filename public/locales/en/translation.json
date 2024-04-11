@@ -1,3 +1,16 @@
 {
-  "Ask anything. Type \"/\" for prompts, \"@\" for files, and \"#\" for tools.": "Ask anything. Type \"/\" for prompts, \"@\" for files, and \"#\" for tools."
+  "Ask anything. Type \"/\" for prompts, \"@\" for files": "Ask anything. Type \"/\" for prompts, \"@\" for files",
+  "Ask anything. Type \"/\" for prompts, \"@\" for files, and \"#\" for tools.": "Ask anything. Type \"/\" for prompts, \"@\" for files, and \"#\" for tools.",
+  "Quick Settings": "Quick Settings",
+  "Search files": "Search files...",
+  "Name": "Name",
+  "Delete": "Delete",
+  "Save": "Save",
+  "Cancel": "Cancel",
+  "New": "New",
+  "Search": "Search",
+  "Edit": "Edit",
+  "Are you sure you want to delete": "Are you sure you want to delete",
+  "Search models": "Search models...",
+  "Prompt name": "Prompt name"
 }

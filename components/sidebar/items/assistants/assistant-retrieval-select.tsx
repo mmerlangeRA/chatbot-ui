@@ -14,6 +14,7 @@ import {
 } from "@tabler/icons-react"
 import { FileIcon } from "lucide-react"
 import { FC, useContext, useEffect, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface AssistantRetrievalSelectProps {
   selectedAssistantRetrievalItems: Tables<"files">[] | Tables<"collections">[]
@@ -33,6 +34,8 @@ export const AssistantRetrievalSelect: FC<AssistantRetrievalSelectProps> = ({
 
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState("")
+
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (isOpen) {
@@ -82,7 +85,7 @@ export const AssistantRetrievalSelect: FC<AssistantRetrievalSelectProps> = ({
       >
         <Input
           ref={inputRef}
-          placeholder="Search files..."
+          placeholder={t("Search files")}
           value={search}
           onChange={e => setSearch(e.target.value)}
           onKeyDown={e => e.stopPropagation()}

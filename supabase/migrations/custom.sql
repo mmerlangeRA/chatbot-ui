@@ -32,7 +32,7 @@ BEGIN
   RETURN QUERY
   SELECT f.*
   FROM files f
-  LEFT JOIN file_workspaces fw ON f.id = fw.assistant_id
+  LEFT JOIN file_workspaces fw ON f.id = fw.file_id
   WHERE f.sharing != 'private' OR fw.workspace_id = workspaceId;
 END;
 $$ LANGUAGE plpgsql STABLE;

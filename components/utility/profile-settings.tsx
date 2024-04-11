@@ -42,6 +42,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import { TextareaAutosize } from "../ui/textarea-autosize"
 import { WithTooltip } from "../ui/with-tooltip"
 import { ThemeSwitcher } from "./theme-switcher"
+import { useTranslation } from "react-i18next"
 
 interface ProfileSettingsProps {}
 
@@ -55,6 +56,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
     availableOpenRouterModels
   } = useContext(ChatbotUIContext)
 
+  const { t } = useTranslation()
   const router = useRouter()
 
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -731,7 +733,7 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
           <div className="flex items-center space-x-1">
             <ThemeSwitcher />
 
-            <WithTooltip
+            {/*             <WithTooltip
               display={
                 <div>
                   Download Chatbot UI 1.0 data as JSON. Import coming soon!
@@ -744,16 +746,16 @@ export const ProfileSettings: FC<ProfileSettingsProps> = ({}) => {
                   onClick={exportLocalStorageAsJSON}
                 />
               }
-            />
+            /> */}
           </div>
 
           <div className="ml-auto space-x-2">
             <Button variant="ghost" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t("Cancel")}
             </Button>
 
             <Button ref={buttonRef} onClick={handleSave}>
-              Save
+              {t("Save")}
             </Button>
           </div>
         </div>

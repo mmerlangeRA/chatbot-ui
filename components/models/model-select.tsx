@@ -12,6 +12,7 @@ import { Input } from "../ui/input"
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs"
 import { ModelIcon } from "./model-icon"
 import { ModelOption } from "./model-option"
+import { useTranslation } from "react-i18next"
 
 interface ModelSelectProps {
   selectedModelId: string
@@ -29,7 +30,7 @@ export const ModelSelect: FC<ModelSelectProps> = ({
     availableLocalModels,
     availableOpenRouterModels
   } = useContext(ChatbotUIContext)
-
+  const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -145,7 +146,7 @@ export const ModelSelect: FC<ModelSelectProps> = ({
         <Input
           ref={inputRef}
           className="w-full"
-          placeholder="Search models..."
+          placeholder={t("Search models")}
           value={search}
           onChange={e => setSearch(e.target.value)}
         />

@@ -24,7 +24,9 @@ import { toast } from "sonner"
 interface ChatInputProps {}
 
 export const ChatInput: FC<ChatInputProps> = ({}) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  //i18n.changeLanguage("fr")
 
   useHotkey("l", () => {
     handleFocusChatInput()
@@ -82,11 +84,13 @@ export const ChatInput: FC<ChatInputProps> = ({}) => {
     }, 200) // FIX: hacky
     if (selectedAssistant) {
       setInputMessagePlaceholder(
-        `Ask me anything. Type "@" for assistants, "/" for prompts, "#" for files.`
+        t(`Ask anything. Type \"/\" for prompts, \"@\" for files`)
       )
     } else {
       setInputMessagePlaceholder(
-        `Ask me anything. Type "@" for assistants, "/" for prompts, "#" for files, and "!" for tools.`
+        t(
+          `Ask anything. Type \"/\" for prompts, \"@\" for files, and \"#\" for tools`
+        )
       )
     }
   }, [selectedPreset, selectedAssistant])

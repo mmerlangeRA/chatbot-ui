@@ -6,6 +6,7 @@ import { Tables } from "@/supabase/types"
 import { IconPencil } from "@tabler/icons-react"
 import { FC, useState } from "react"
 import { SidebarItem } from "../all/sidebar-display-item"
+import { useTranslation } from "react-i18next"
 
 interface PromptItemProps {
   prompt: Tables<"prompts">
@@ -15,6 +16,7 @@ export const PromptItem: FC<PromptItemProps> = ({ prompt }) => {
   const [name, setName] = useState(prompt.name)
   const [content, setContent] = useState(prompt.content)
   const [isTyping, setIsTyping] = useState(false)
+  const { t } = useTranslation()
   return (
     <SidebarItem
       item={prompt}
@@ -25,10 +27,10 @@ export const PromptItem: FC<PromptItemProps> = ({ prompt }) => {
       renderInputs={() => (
         <>
           <div className="space-y-1">
-            <Label>Name</Label>
+            <Label>{t("Name")}</Label>
 
             <Input
-              placeholder="Prompt name..."
+              placeholder={t("Prompt name")}
               value={name}
               onChange={e => setName(e.target.value)}
               maxLength={PROMPT_NAME_MAX}
