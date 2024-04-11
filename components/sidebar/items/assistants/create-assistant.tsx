@@ -40,6 +40,11 @@ export const CreateAssistant: FC<CreateAssistantProps> = ({
   const [selectedAssistantToolItems, setSelectedAssistantToolItems] = useState<
     Tables<"tools">[]
   >([])
+  const [sharing, setSharing] = useState("private")
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   useEffect(() => {
     setAssistantChatSettings(prevSettings => {
@@ -112,6 +117,7 @@ export const CreateAssistant: FC<CreateAssistantProps> = ({
           image: selectedImage,
           user_id: profile.user_id,
           name,
+          sharing,
           description,
           include_profile_context: assistantChatSettings.includeProfileContext,
           include_workspace_instructions:
@@ -144,6 +150,16 @@ export const CreateAssistant: FC<CreateAssistantProps> = ({
               onChange={e => setName(e.target.value)}
               maxLength={ASSISTANT_NAME_MAX}
             />
+          </div>
+          <div className="space-y-1">
+            <label>
+              <input
+                type="checkbox"
+                checked={sharing === "public"}
+                onChange={handleCheckboxChange}
+              />
+              Public
+            </label>
           </div>
 
           <div className="space-y-1 pt-2">

@@ -25,6 +25,11 @@ export const CreateCollection: FC<CreateCollectionProps> = ({
   const [selectedCollectionFiles, setSelectedCollectionFiles] = useState<
     CollectionFile[]
   >([])
+  const [sharing, setSharing] = useState("private")
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   const handleFileSelect = (file: CollectionFile) => {
     setSelectedCollectionFiles(prevState => {
@@ -55,6 +60,7 @@ export const CreateCollection: FC<CreateCollectionProps> = ({
           })),
           user_id: profile.user_id,
           name,
+          sharing,
           description
         } as TablesInsert<"collections">
       }
@@ -82,7 +88,16 @@ export const CreateCollection: FC<CreateCollectionProps> = ({
               maxLength={COLLECTION_NAME_MAX}
             />
           </div>
-
+          <div className="space-y-1">
+            <label>
+              <input
+                type="checkbox"
+                checked={sharing === "public"}
+                onChange={handleCheckboxChange}
+              />
+              Public
+            </label>
+          </div>
           <div className="space-y-1">
             <Label>Description</Label>
 

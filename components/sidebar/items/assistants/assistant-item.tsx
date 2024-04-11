@@ -23,7 +23,6 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
   const [name, setName] = useState(assistant.name)
   const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState(assistant.description)
-  const [sharing, setSharing] = useState(assistant.sharing)
   const [assistantChatSettings, setAssistantChatSettings] = useState({
     model: assistant.model,
     prompt: assistant.prompt,
@@ -34,6 +33,7 @@ export const AssistantItem: FC<AssistantItemProps> = ({ assistant }) => {
   })
   const [selectedImage, setSelectedImage] = useState<File | null>(null)
   const [imageLink, setImageLink] = useState("")
+  const [sharing, setSharing] = useState(assistant.sharing)
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSharing(event.target.checked ? "public" : "private")

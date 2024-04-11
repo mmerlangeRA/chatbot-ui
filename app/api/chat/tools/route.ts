@@ -221,9 +221,7 @@ export async function POST(request: Request) {
         }
 
         if (Array.isArray(data) && data.length > 0 && data[0].file_id) {
-          console.log("adding " + data.length)
           sources = sources.concat(data)
-          console.log("now " + sources.length)
         }
 
         messages.push({
@@ -246,7 +244,6 @@ export async function POST(request: Request) {
     const response = new StreamingTextResponse(stream)
     console.log(response)
 
-    //console.log(data)
     if (sources.length > 0) {
       const uniqueSources = removeDuplicateChunks(sources)
       const serializedArray = JSON.stringify(uniqueSources)

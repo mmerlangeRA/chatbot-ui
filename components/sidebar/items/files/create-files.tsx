@@ -20,6 +20,11 @@ export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
   const [description, setDescription] = useState("")
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedFiles, setSelectedFiles] = useState<File[] | []>([])
+  const [sharing, setSharing] = useState("private")
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   const handleSelectedFiles = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -43,6 +48,7 @@ export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
           files: selectedFiles,
           user_id: profile.user_id,
           name,
+          sharing,
           description,
           file_path: "",
           size: selectedFile?.size || 0,
@@ -64,6 +70,16 @@ export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
               accept={ACCEPTED_FILE_TYPES}
               multiple
             />
+          </div>
+          <div className="space-y-1">
+            <label>
+              <input
+                type="checkbox"
+                checked={sharing === "public"}
+                onChange={handleCheckboxChange}
+              />
+              Public
+            </label>
           </div>
           {selectedFiles.length === 1 && (
             <div className="space-y-1">

@@ -11,9 +11,7 @@ export async function POST(request: Request) {
     sourceCount: number
   }
   try {
-    console.log("trying")
-    console.log(apiURL)
-    console.log(userInput)
+    console.log("qerying with " + userInput)
     const response = await fetch(apiURL, {
       method: "POST",
       headers: {
@@ -24,7 +22,6 @@ export async function POST(request: Request) {
         query: userInput
       })
     })
-    console.log("got response !!!")
     const { results } = await response.json()
     console.log(results)
     return new Response(JSON.stringify({ results }), {

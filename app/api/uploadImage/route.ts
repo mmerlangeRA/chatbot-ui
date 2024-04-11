@@ -20,6 +20,5 @@ async function uploadImageAndGetUrl(dataUrl: string): Promise<string> {
   }
 
   const data = await response.json()
-  console.log(data)
   return `${serverUrl}/static/${data.filename}`
 }

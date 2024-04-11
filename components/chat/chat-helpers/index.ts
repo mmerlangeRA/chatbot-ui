@@ -485,7 +485,6 @@ export const handleCreateMessages = async (
         }
       })
     )
-    console.log("createdMessageFileItems", createdMessageFileItems)
     finalChatMessages = [
       ...chatMessages,
       {

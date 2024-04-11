@@ -121,7 +121,7 @@ export const ChatUI: FC<ChatUIProps> = ({}) => {
 
     //@ts-ignore
     const uniqueFileItems = messageFileItems.flatMap(item => item.file_items)
-    console.log(uniqueFileItems)
+    //console.log(uniqueFileItems)
     setChatFileItems(uniqueFileItems)
 
     const chatFiles = await getChatFilesByChatId(params.chatid as string)

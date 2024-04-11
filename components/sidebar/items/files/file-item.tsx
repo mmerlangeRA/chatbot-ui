@@ -15,6 +15,11 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
   const [name, setName] = useState(file.name)
   const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState(file.description)
+  const [sharing, setSharing] = useState(file.sharing)
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSharing(event.target.checked ? "public" : "private")
+  }
 
   const getLinkAndView = async () => {
     const link = await getFileFromStorage(file.file_path)
@@ -27,7 +32,7 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
       isTyping={isTyping}
       contentType="files"
       icon={<FileIcon type={file.type} size={30} />}
-      updateState={{ name, description }}
+      updateState={{ name, description, sharing }}
       renderInputs={() => (
         <>
           <div
@@ -54,6 +59,16 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
               onChange={e => setName(e.target.value)}
               maxLength={FILE_NAME_MAX}
             />
+          </div>
+          <div className="space-y-1">
+            <label>
+              <input
+                type="checkbox"
+                checked={sharing === "public"}
+                onChange={handleCheckboxChange}
+              />
+              Public
+            </label>
           </div>
 
           <div className="space-y-1">

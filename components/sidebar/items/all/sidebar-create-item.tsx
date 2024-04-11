@@ -71,7 +71,6 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
       createState: { files: File[] } & TablesInsert<"files">,
       workspaceId: string
     ) => {
-      console.log("batchFiles")
       if (!selectedWorkspace) return
 
       const { files, ...rest } = createState
@@ -83,6 +82,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
         local.size = file.size || 0
         local.type = file.type || 0
         local.description = ""
+        local.sharing = rest.sharing
         locals.push(local)
       })
 
@@ -211,7 +211,7 @@ export const SidebarCreateItem: FC<SidebarCreateItemProps> = ({
         selectedWorkspace.id
       )
       if (newItem_or_Items && Array.isArray(newItem_or_Items)) {
-        console.log("newItem_or_Items", newItem_or_Items)
+        //can be array for files for instance (we allow multiple files creation)
         setStateFunction((prevItems: any) => [
           ...prevItems,
           ...newItem_or_Items

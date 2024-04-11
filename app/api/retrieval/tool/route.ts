@@ -107,7 +107,6 @@ export async function POST(request: Request) {
       status: 200
     })
   } catch (error: any) {
-    console.log(error)
     const errorMessage = error.error?.message || "An unexpected error occurred"
     const errorCode = error.status || 500
     return new Response(JSON.stringify({ message: errorMessage }), {

@@ -232,7 +232,7 @@ export interface Database {
           model: string
           name: string
           prompt: string
-          sharing: string
+          sharing: "public" | "private"
           temperature: number
           updated_at: string | null
           user_id: string
@@ -349,7 +349,7 @@ export interface Database {
           model: string
           name: string
           prompt: string
-          sharing: string
+          sharing: "public" | "private"
           temperature: number
           updated_at: string | null
           user_id: string
@@ -521,7 +521,7 @@ export interface Database {
           folder_id: string | null
           id: string
           name: string
-          sharing: string
+          sharing: "public" | "private"
           updated_at: string | null
           user_id: string
         }
@@ -571,7 +571,7 @@ export interface Database {
           level: number | null
           local_embedding: string | null
           openai_embedding: string | null
-          sharing: string
+          sharing: "public" | "private"
           tokens: number
           updated_at: string | null
           user_id: string
@@ -673,7 +673,7 @@ export interface Database {
           folder_id: string | null
           id: string
           name: string
-          sharing: string
+          sharing: "public" | "private"
           size: number
           tokens: number
           type: string
@@ -970,7 +970,7 @@ export interface Database {
           id: string
           model_id: string
           name: string
-          sharing: string
+          sharing: "public" | "private"
           updated_at: string | null
           user_id: string
         }
@@ -1078,7 +1078,7 @@ export interface Database {
           model: string
           name: string
           prompt: string
-          sharing: string
+          sharing: "public" | "private"
           temperature: number
           updated_at: string | null
           user_id: string
@@ -1282,7 +1282,7 @@ export interface Database {
           folder_id: string | null
           id: string
           name: string
-          sharing: string
+          sharing: "public" | "private"
           updated_at: string | null
           user_id: string
         }
@@ -1378,7 +1378,7 @@ export interface Database {
           id: string
           name: string
           schema: Json
-          sharing: string
+          sharing: "public" | "private"
           updated_at: string | null
           url: string
           user_id: string
@@ -1442,7 +1442,7 @@ export interface Database {
           instructions: string
           is_home: boolean
           name: string
-          sharing: string
+          sharing: "public" | "private"
           updated_at: string | null
           user_id: string
         }
@@ -1509,7 +1509,7 @@ export interface Database {
           folder_id: string
           created_at: string
           updated_at: string | null
-          sharing: string
+          sharing: "public" | "private"
           description: string
           name: string
         }[]
@@ -1524,7 +1524,7 @@ export interface Database {
           updated_at: string | null
           user_id: string
           folder_id: string
-          sharing: string
+          sharing: "public" | "private"
           name: string
           description: string
           embeddings_provider: string
@@ -1547,7 +1547,7 @@ export interface Database {
           folder_id: string
           created_at: string
           updated_at: string | null
-          sharing: string
+          sharing: "public" | "private"
           description: string
           file_path: string
           name: string

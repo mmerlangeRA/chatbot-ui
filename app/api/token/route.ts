@@ -10,7 +10,6 @@ const apiURL = `${serverUrl}/token`
 export async function GET(request: Request) {
   try {
     const profile = await getServerProfile()
-    console.log(profile)
     const user_id = profile.id
 
     const body = {
@@ -30,7 +29,7 @@ export async function GET(request: Request) {
       body: JSON.stringify(body)
     })
     const results = await response.json()
-    console.log(results)
+
     return new NextResponse("Got token", {
       status: 200
     })
