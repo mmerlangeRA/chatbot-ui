@@ -1,18 +1,35 @@
-import React, { FC } from "react"
+import React, { FC, useContext, useEffect } from "react"
 import remarkGfm from "remark-gfm"
 import remarkMath from "remark-math"
 import { MessageCodeBlock } from "./message-codeblock"
 import { MessageMarkdownMemoized } from "./message-markdown-memoized"
+import rehypeRaw from "rehype-raw"
 
 interface MessageMarkdownProps {
   content: string
 }
 
+function _formatChunkSources(inputString: string): string {
+  let index = 1 // Start index from 1 or 0 as per your requirement
+  const regex = /<<([^>]*)>>/g // Simplified and corrected regex for matching <<id>>
+
+  const modified = inputString.replace(regex, (match, id) => {
+    const replacement = `<a href="#" data-chunk-id="${id}" class="references">${index}</a>`
+    index++ // Increment the index for the next match
+    return replacement
+  })
+
+  return modified
+}
+
 export const MessageMarkdown: FC<MessageMarkdownProps> = ({ content }) => {
+  const formattedContent = _formatChunkSources(content)
+
   return (
     <MessageMarkdownMemoized
       className="prose dark:prose-invert prose-p:leading-relaxed prose-pre:p-0 min-w-full space-y-6 break-words"
       remarkPlugins={[remarkGfm, remarkMath]}
+      rehypePlugins={[rehypeRaw] as any}
       components={{
         p({ children }) {
           return <p className="mb-2 last:mb-0">{children}</p>
@@ -59,7 +76,7 @@ export const MessageMarkdown: FC<MessageMarkdownProps> = ({ content }) => {
         }
       }}
     >
-      {content}
+      {formattedContent}
     </MessageMarkdownMemoized>
   )
 }

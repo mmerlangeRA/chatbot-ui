@@ -78,6 +78,37 @@ export const Message: FC<MessageProps> = ({
 
   const [viewSources, setViewSources] = useState(false)
 
+  const showReference = async (chunk_id: string) => {
+    const formData = new FormData()
+    formData.append("chunk_id", chunk_id)
+    const responseGETCHUNK = await fetch("/api/python_server/get_chunk", {
+      method: "POST",
+      body: formData
+    })
+
+    const chunk = await responseGETCHUNK.json()
+    chunk.file_name =
+      files.find(f => f.id == chunk.file_id)?.name || "Not found title"
+    setSelectedFileItem(chunk)
+    setShowFileItemPreview(true)
+  }
+
+  useEffect(() => {
+    if (!isGenerating) {
+      const references = Array.from(
+        document.getElementsByClassName("references")
+      )
+      references.forEach(reference => {
+        reference.addEventListener("click", e => {
+          e.preventDefault()
+          const chunkId = reference.getAttribute("data-chunk-id")
+          showReference(chunkId as string)
+        })
+        reference.classList.remove("references")
+      })
+    }
+  }, [isGenerating])
+
   const handleCopy = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(message.content)

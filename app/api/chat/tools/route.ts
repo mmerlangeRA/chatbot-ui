@@ -99,9 +99,9 @@ export async function POST(request: Request) {
     if (toolCalls.length > 0) {
       console.log("I will call " + toolCalls.length + " tools")
       for (const toolCall of toolCalls) {
-        console.log("moving on callings")
         const functionCall = toolCall.function
         const functionName = functionCall.name
+        console.log("moving on calling " + functionName)
         const argumentsString = toolCall.function.arguments.trim()
         const parsedArgs = JSON.parse(argumentsString)
 
@@ -232,7 +232,8 @@ export async function POST(request: Request) {
         })
       }
     }
-    console.log("Sending for secondResponse")
+    //console.log("Sending for secondResponse")
+    //console.log(messages)
     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
@@ -242,7 +243,7 @@ export async function POST(request: Request) {
     const stream = OpenAIStream(secondResponse)
 
     const response = new StreamingTextResponse(stream)
-    console.log(response)
+    //console.log(response)
 
     if (sources.length > 0) {
       console.log("sending sources")
