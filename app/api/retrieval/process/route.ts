@@ -4,8 +4,6 @@ const serverUrl = process.env.NOCODE_SERVER
 const token = process.env.NOCODE_SERVER_TOKEN
 const apiURL = `${serverUrl}/rag/ingest`
 
-const CHATBOT_URL = process.env.CHATBOT_URL
-
 export async function POST(req: Request) {
   try {
     const profile = await getServerProfile()
