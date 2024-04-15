@@ -15,6 +15,7 @@ import { Tables } from "@/supabase/types"
 import { FC, useContext, useRef, useState } from "react"
 import { Input } from "../ui/input"
 import { useRouter } from "next/navigation"
+import { useTranslation } from "react-i18next"
 
 interface DeleteWorkspaceProps {
   workspace: Tables<"workspaces">
@@ -25,6 +26,7 @@ export const DeleteWorkspace: FC<DeleteWorkspaceProps> = ({
   workspace,
   onDelete
 }) => {
+  const { t } = useTranslation()
   const { setWorkspaces, setSelectedWorkspace } = useContext(ChatbotUIContext)
   const { handleNewChat } = useChatHandler()
   const router = useRouter()
@@ -87,7 +89,7 @@ export const DeleteWorkspace: FC<DeleteWorkspaceProps> = ({
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowWorkspaceDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button
@@ -96,7 +98,7 @@ export const DeleteWorkspace: FC<DeleteWorkspaceProps> = ({
             onClick={handleDeleteWorkspace}
             disabled={name !== workspace.name}
           >
-            Delete
+            {t("Delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

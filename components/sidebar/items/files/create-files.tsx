@@ -6,6 +6,7 @@ import { ChatbotUIContext } from "@/context/context"
 import { FILE_DESCRIPTION_MAX, FILE_NAME_MAX } from "@/db/limits"
 import { TablesInsert } from "@/supabase/types"
 import { FC, useContext, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface CreateFilesProps {
   isOpen: boolean
@@ -22,6 +23,7 @@ export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
   const [selectedFiles, setSelectedFiles] = useState<File[] | []>([])
   const [sharing, setSharing] = useState("private")
 
+  const { t } = useTranslation()
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSharing(event.target.checked ? "public" : "private")
   }
@@ -62,7 +64,7 @@ export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
       renderInputs={() => (
         <>
           <div className="space-y-1">
-            <Label>File</Label>
+            <Label>{t("File")}</Label>
 
             <Input
               type="file"
@@ -83,7 +85,7 @@ export const CreateFiles: FC<CreateFilesProps> = ({ isOpen, onOpenChange }) => {
           </div>
           {selectedFiles.length === 1 && (
             <div className="space-y-1">
-              <Label>Name</Label>
+              <Label>{t("Name")}</Label>
 
               <Input
                 placeholder="File name..."

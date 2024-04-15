@@ -14,6 +14,7 @@ import { updateFolder } from "@/db/folders"
 import { Tables } from "@/supabase/types"
 import { IconEdit } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 
 interface UpdateFolderProps {
   folder: Tables<"folders">
@@ -21,7 +22,7 @@ interface UpdateFolderProps {
 
 export const UpdateFolder: FC<UpdateFolderProps> = ({ folder }) => {
   const { setFolders } = useContext(ChatbotUIContext)
-
+  const { t } = useTranslation()
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [showFolderDialog, setShowFolderDialog] = useState(false)
@@ -63,11 +64,11 @@ export const UpdateFolder: FC<UpdateFolderProps> = ({ folder }) => {
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowFolderDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button ref={buttonRef} onClick={handleUpdateFolder}>
-            Save
+            {t("Save")}
           </Button>
         </DialogFooter>
       </DialogContent>

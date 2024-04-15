@@ -4,6 +4,7 @@
   "Quick Settings": "Quick Settings",
   "Search files": "Search files...",
   "Name": "Name",
+  "Create": "Create",
   "Delete": "Delete",
   "Save": "Save",
   "Cancel": "Cancel",
@@ -12,5 +13,8 @@
   "Edit": "Edit",
   "Are you sure you want to delete": "Are you sure you want to delete",
   "Search models": "Search models...",
-  "Prompt name": "Prompt name"
+  "Prompt name": "Prompt name",
+  "View": "View",
+  "File": "File",
+  "files": "files"
 }

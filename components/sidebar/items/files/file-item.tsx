@@ -6,6 +6,7 @@ import { getFileFromStorage } from "@/db/storage/files"
 import { Tables } from "@/supabase/types"
 import { FC, useState } from "react"
 import { SidebarItem } from "../all/sidebar-display-item"
+import { useTranslation } from "react-i18next"
 
 interface FileItemProps {
   file: Tables<"files">
@@ -16,6 +17,8 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
   const [isTyping, setIsTyping] = useState(false)
   const [description, setDescription] = useState(file.description)
   const [sharing, setSharing] = useState(file.sharing)
+
+  const { t } = useTranslation()
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSharing(event.target.checked ? "public" : "private")
@@ -39,7 +42,7 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
             className="cursor-pointer underline hover:opacity-50"
             onClick={getLinkAndView}
           >
-            View {file.name}
+            {t("View")} {file.name}
           </div>
 
           <div className="flex flex-col justify-between">
@@ -51,7 +54,7 @@ export const FileItem: FC<FileItemProps> = ({ file }) => {
           </div>
 
           <div className="space-y-1">
-            <Label>Name</Label>
+            <Label>{t("Name")}</Label>
 
             <Input
               placeholder="File name..."

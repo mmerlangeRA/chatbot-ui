@@ -15,6 +15,7 @@ import { Tables } from "@/supabase/types"
 import { ContentType } from "@/types"
 import { IconTrash } from "@tabler/icons-react"
 import { FC, useContext, useRef, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
 interface DeleteFolderProps {
@@ -38,6 +39,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
     setModels
   } = useContext(ChatbotUIContext)
 
+  const { t } = useTranslation()
   const buttonRef = useRef<HTMLButtonElement>(null)
 
   const [showFolderDialog, setShowFolderDialog] = useState(false)
@@ -108,7 +110,9 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
 
       <DialogContent className="min-w-[550px]">
         <DialogHeader>
-          <DialogTitle>Delete {folder.name}</DialogTitle>
+          <DialogTitle>
+            {t("Delete")} {folder.name}
+          </DialogTitle>
 
           <DialogDescription>
             Are you sure you want to delete this folder?
@@ -117,7 +121,7 @@ export const DeleteFolder: FC<DeleteFolderProps> = ({
 
         <DialogFooter>
           <Button variant="ghost" onClick={() => setShowFolderDialog(false)}>
-            Cancel
+            {t("Cancel")}
           </Button>
 
           <Button
