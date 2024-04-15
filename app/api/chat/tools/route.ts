@@ -245,6 +245,7 @@ export async function POST(request: Request) {
     console.log(response)
 
     if (sources.length > 0) {
+      console.log("sending sources")
       const uniqueSources = removeDuplicateChunks(sources)
       const serializedArray = JSON.stringify(uniqueSources)
       const base64EncodedArray = Buffer.from(serializedArray).toString("base64")
@@ -253,7 +254,7 @@ export async function POST(request: Request) {
     console.log("returning response")
     return response
   } catch (error: any) {
-    console.error(error)
+    console.log(error)
     const errorMessage = error.error?.message || "An unexpected error occurred"
     const errorCode = error.status || 500
     return new Response(JSON.stringify({ message: errorMessage }), {
