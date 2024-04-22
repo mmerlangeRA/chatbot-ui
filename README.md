@@ -196,3 +196,13 @@ supabase db push
 
 Your hosted database should now be set up!
 
+## About using tools ...
+
+If you call the nocode_litellm server, you will need a token.
+
+This token can be generated in http://localhost:8001/docs#/token/get_token_v1_token_post (or http://nocode.nemato-data.fr:8001/docs#/token/get_token_v1_token_post)
+
+For admin_key, you need to use the one in your nocode_litellm settings; by default : "admin"
+
+Example : 
+{"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MjE0NzkwNTYsImlhdCI6MTcxMjgzOTA1Niwic2NvcGUiOnsibW9kZWxzIjpbImdwdC0zLjUtdHVyYm8iLCJtaXN0cmFsL21pc3RyYWwtdGlueSJdfX0.W7enu80Dzrv1ACbokCiKZbwEo1iYRcrOE8InY3s9iTk"}
