@@ -1,6 +1,5 @@
 # Use the Node.js official image as a parent image
-# FROM node:20
-FROM node:21.5.0-bookworm
+FROM node:21.7-bookworm
 
 # Create a non-root user and switch to it
 # RUN adduser --disabled-password myuser

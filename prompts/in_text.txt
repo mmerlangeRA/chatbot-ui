@@ -1,7 +1,0 @@
-Please answer the question with citation to the paragraphs. /
- For every sentence you write, cite the book name and paragraph number as <id_x_x> /
- 
- At the end of your commentary: 
- 1. Add key words from the book paragraphs. / 
- 2. Suggest a further question that can be answered by the paragraphs provided. / 
- 3. Create a sources list of book names, paragraph Number author name, and a link for each book you cited.
