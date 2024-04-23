@@ -16,14 +16,14 @@ export async function POST(request: Request) {
 
   try {
     const profile = await getServerProfile()
-
+    console.log("1")
     checkApiKey(profile.openai_api_key, "OpenAI")
-
+    console.log("2")
     const openai = new OpenAI({
       apiKey: profile.openai_api_key || "",
       organization: profile.openai_organization_id
     })
-
+    console.log("3")
     const response = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages: messages as ChatCompletionCreateParamsBase["messages"],
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
       max_tokens: chatSettings.model === "gpt-4-vision-preview" ? 4096 : null, // TODO: Fix
       stream: true
     })
+    console.log("4")
 
     const stream = OpenAIStream(response)
 

@@ -2,10 +2,14 @@ import { Chunk } from "@/components/interfaces"
 import { openapiToFunctions } from "@/lib/openapi-conversion"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Tables } from "@/supabase/types"
-import { ChatSettings } from "@/types"
+import { ChatSettings, LLM } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
+import { fi } from "date-fns/locale"
 import OpenAI from "openai"
 import { ChatCompletionCreateParamsBase } from "openai/resources/chat/completions.mjs"
+
+const serverUrl = process.env.NOCODE_SERVER
+const token = process.env.NOCODE_SERVER_TOKEN
 
 function removeDuplicateChunks(chunks: Chunk[]) {
   const uniqueChunks = new Map()
@@ -17,14 +21,16 @@ function removeDuplicateChunks(chunks: Chunk[]) {
 
 export async function POST(request: Request) {
   const json = await request.json()
-  const { chatSettings, messages, selectedTools } = json as {
-    chatSettings: ChatSettings
-    messages: any[]
-    selectedTools: Tables<"tools">[]
-  }
+  const { chatSettings, messages, selectedTools, modelData, profile } =
+    json as {
+      chatSettings: ChatSettings
+      messages: any[]
+      selectedTools: Tables<"tools">[]
+      modelData: LLM
+      profile: Tables<"profiles">
+    }
 
   try {
-    const profile = await getServerProfile()
     let sources: Chunk[] = []
     checkApiKey(profile.openai_api_key, "OpenAI")
 
@@ -74,15 +80,33 @@ export async function POST(request: Request) {
         console.error("Error converting schema", error)
       }
     }
-    //console.log(messages)
-    //console.log(allTools)
-    const firstResponse = await openai.chat.completions.create({
-      model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
-      messages,
-      tools: allTools.length > 0 ? allTools : undefined
-    })
+    console.log(messages)
+    console.log("allTools", allTools)
 
-    const message = firstResponse.choices[0].message
+    const apiURL = `${serverUrl}/completion/firstresponse`
+    const firstResponse = await fetch(apiURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        include_sources: true,
+        stream: false,
+        messages: messages,
+        tools: allTools
+      })
+    })
+    const firstResponseJson = await firstResponse.json()
+    console.log("firstResponseJson", firstResponseJson)
+    console.log("firstResponseJson.choices is ", firstResponseJson.choices)
+    console.log(typeof firstResponseJson.choices)
+    const firstChoice = firstResponseJson.choices[0]
+    console.log("firstResponseJson.choices[0] is ", firstChoice)
+    //@ts-ignore
+    const message = firstChoice.message
+    console.log("message", message)
     messages.push(message)
     //console.log(message)
     const toolCalls = message.tool_calls || []

@@ -290,7 +290,9 @@ export const useChatHandler = () => {
           body: JSON.stringify({
             chatSettings: payload.chatSettings,
             messages: formattedMessages,
-            selectedTools
+            selectedTools,
+            modelData: modelData,
+            profile: profile
           })
         })
         console.log("got response from tool", response)

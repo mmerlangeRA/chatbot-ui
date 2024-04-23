@@ -47,6 +47,7 @@ export type PerplexityLLMID =
   | "mixtral-8x7b-instruct" // Mixtral 8x7B Instruct
   | "mistral-7b-instruct" // Mistral 7B Instruct
   | "llama-2-70b-chat" // Llama2 70B Chat
+  | "llama3-70b-8192" // Llama3 70B Chat
   | "codellama-34b-instruct" // CodeLlama 34B Instruct
   | "codellama-70b-instruct" // CodeLlama 70B Instruct
   | "sonar-small-chat" // Sonar Small Chat
