@@ -1,8 +1,13 @@
+import { fetchChatResponse } from "@/components/chat/chat-helpers"
 import { Chunk } from "@/components/interfaces"
+import {
+  buildFinalMessages,
+  buildGoogleGeminiFinalMessages
+} from "@/lib/build-prompt"
 import { openapiToFunctions } from "@/lib/openapi-conversion"
 import { checkApiKey, getServerProfile } from "@/lib/server/server-chat-helpers"
 import { Tables } from "@/supabase/types"
-import { ChatSettings, LLM } from "@/types"
+import { ChatMessage, ChatPayload, ChatSettings, LLM } from "@/types"
 import { OpenAIStream, StreamingTextResponse } from "ai"
 import { fi } from "date-fns/locale"
 import OpenAI from "openai"
@@ -21,23 +26,30 @@ function removeDuplicateChunks(chunks: Chunk[]) {
 
 export async function POST(request: Request) {
   const json = await request.json()
-  const { chatSettings, messages, selectedTools, modelData, profile } =
-    json as {
-      chatSettings: ChatSettings
-      messages: any[]
-      selectedTools: Tables<"tools">[]
-      modelData: LLM
-      profile: Tables<"profiles">
-    }
-
+  const {
+    chatSettings,
+    messages,
+    selectedTools,
+    modelData,
+    profile,
+    payload,
+    newAbortController,
+    setIsGenerating,
+    setChatMessages
+  } = json as {
+    chatSettings: ChatSettings
+    messages: any[]
+    selectedTools: Tables<"tools">[]
+    modelData: LLM
+    profile: Tables<"profiles">
+    payload: ChatPayload
+    newAbortController: AbortController
+    setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>
+    setChatMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>
+  }
+  console.log("payload", payload)
   try {
     let sources: Chunk[] = []
-    checkApiKey(profile.openai_api_key, "OpenAI")
-
-    const openai = new OpenAI({
-      apiKey: profile.openai_api_key || "",
-      organization: profile.openai_organization_id
-    })
 
     let allTools: OpenAI.Chat.Completions.ChatCompletionTool[] = []
     let allRouteMaps = {}
@@ -256,9 +268,42 @@ export async function POST(request: Request) {
         })
       }
     }
-    //console.log("Sending for secondResponse")
-    //console.log(messages)
-    const secondResponse = await openai.chat.completions.create({
+    const provider =
+      modelData.provider === "openai" && profile.use_azure_openai
+        ? "azure"
+        : modelData.provider
+
+    let formattedMessages = []
+
+    /*  if (provider === "google") {
+      formattedMessages = await buildGoogleGeminiFinalMessages(
+        payload,
+        profile,
+        []
+      )
+    } else {
+      formattedMessages = await buildFinalMessages(payload, profile, [])
+    }
+ */
+    const apiEndpoint =
+      "http://localhost:3000" +
+      (provider === "custom" ? "/api/chat/custom" : `/api/chat/${provider}`)
+
+    const requestBody = {
+      chatSettings: payload.chatSettings,
+      messages: messages,
+      customModelId: provider === "custom" ? modelData.hostedId : ""
+    }
+    console.log("apiEndpoint=" + apiEndpoint)
+    const response = await fetchChatResponse(
+      apiEndpoint,
+      requestBody,
+      true,
+      newAbortController,
+      setIsGenerating,
+      setChatMessages
+    )
+    /*     const secondResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
       stream: true
@@ -266,7 +311,7 @@ export async function POST(request: Request) {
 
     const stream = OpenAIStream(secondResponse)
 
-    const response = new StreamingTextResponse(stream)
+    const response = new StreamingTextResponse(stream) */
     //console.log(response)
 
     if (sources.length > 0) {

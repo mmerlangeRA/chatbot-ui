@@ -292,7 +292,11 @@ export const useChatHandler = () => {
             messages: formattedMessages,
             selectedTools,
             modelData: modelData,
-            profile: profile
+            profile: profile,
+            payload: profile,
+            newAbortController: newAbortController,
+            setIsGenerating: setIsGenerating,
+            setChatMessages: setChatMessages
           })
         })
         console.log("got response from tool", response)
