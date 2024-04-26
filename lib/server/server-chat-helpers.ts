@@ -4,7 +4,6 @@ import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
 
 export async function getServerProfile() {
-  //console.log("getServerProfile")
   const cookieStore = cookies()
 
   const supabase = createServerClient<Database>(
@@ -35,9 +34,8 @@ export async function getServerProfile() {
   }
 
   const profileWithKeys = addApiKeysToProfile(profile)
-  const profileWithToken = await addTokenToProfile(profileWithKeys)
-
-  //console.log("Profile with token", profileWithToken)
+  const profileWithToken =
+    (await addTokenToProfile(profileWithKeys)) || profileWithKeys
   return profileWithToken
 }
 
@@ -45,6 +43,7 @@ async function addTokenToProfile(profile: Tables<"profiles">) {
   const serverUrl = process.env.NOCODE_SERVER
   const adminToken = process.env.NOCODE_SERVER_TOKEN
   const apiURL = `${serverUrl}/token`
+  console.log("apiURL", apiURL)
   const user_id = profile.id
 
   const body = {
@@ -54,18 +53,21 @@ async function addTokenToProfile(profile: Tables<"profiles">) {
     },
     user_id: user_id
   }
+  try {
+    const response = await fetch(apiURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + adminToken
+      },
+      body: JSON.stringify(body)
+    })
+    const token = await response.json()
 
-  const response = await fetch(apiURL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + adminToken
-    },
-    body: JSON.stringify(body)
-  })
-  const token = await response.json()
-
-  return { ...profile, token }
+    return { ...profile, token }
+  } catch (e) {
+    console.log(e)
+  }
 }
 
 function addApiKeysToProfile(profile: Tables<"profiles">) {

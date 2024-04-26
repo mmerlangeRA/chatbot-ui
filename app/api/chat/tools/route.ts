@@ -76,6 +76,8 @@ export async function POST(request: Request) {
     }
     //console.log(messages)
     //console.log(allTools)
+    console.log("sending for fisrt")
+    console.log(chatSettings.model)
     const firstResponse = await openai.chat.completions.create({
       model: chatSettings.model as ChatCompletionCreateParamsBase["model"],
       messages,
